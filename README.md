@@ -25,11 +25,8 @@ huggingface-cli login
 | `data/` | HuggingFace submodule with all large data (run logs, workload traces, perf models) |
 | `scripts/` | Plotting and analysis scripts |
 | `figures/` | Pre-built reference figures from the paper |
-| `AUDIT_LOG.md` | Full provenance: every artifact traced to its script and data |
 
 ## Reproducing Paper Artifacts
-
-See [AUDIT_LOG.md](AUDIT_LOG.md) for complete provenance and reproduction commands.
 
 ### Summary Table
 
@@ -57,4 +54,4 @@ The `data/` submodule ([rbachkaniwala3/stream2llm-data](https://huggingface.co/d
 
 ## License
 
-See the paper for details.
+This project is licensed under the [MIT License](LICENSE).
