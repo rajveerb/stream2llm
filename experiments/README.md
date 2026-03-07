@@ -45,11 +45,11 @@ Experiment configs write output directly to `data/run_log/`, so the same plot co
 
 ### Available Arrival Times
 
-**Crawler (`*_full` configs):** 12 levels — `0_0625`, `0_125`, `0_166667`, `0_2`, `0_25`, `0_5`, `1`, `2`, `4`, `8`, `16`, `32` (seconds between arrivals)
+**Crawler (`*_full` configs):** 4 levels — `0_25`, `0_5`, `1`, `2` (seconds between arrivals, i.e. QPS 4, 2, 1, 0.5)
 
 **Crawler (delay/ablation configs):** 1 level — `0_25`
 
-**ANNS (`*_full` configs):** 7 levels — `0_0625`, `0_125`, `0_25`, `0_5`, `1`, `2`, `4`
+**ANNS (`*_full` configs):** 4 levels — `0_5`, `1`, `2`, `4` (seconds between arrivals, i.e. QPS 2, 1, 0.5, 0.25)
 
 **ANNS (delay/ablation configs):** 1 level — `0_5`
 
@@ -358,7 +358,7 @@ To reproduce all 10 experiment configurations from scratch:
 ```bash
 # --- Crawler experiments ---
 
-# H200 main experiment (all schedulers x 12 arrival times)
+# H200 main experiment (all schedulers x 4 arrival times)
 bash experiments/crawler/run_scheduler_experiments.sh \
   experiments/crawler/configs/H200_enhanced_schedulers_v1_full all
 
@@ -370,13 +370,13 @@ bash experiments/crawler/run_scheduler_experiments.sh \
 bash experiments/crawler/run_scheduler_experiments.sh \
   experiments/crawler/configs/H200_enhanced_schedulers_v1_full_delay_10_swap_only compare 0_25
 
-# H100 hardware comparison (all schedulers x 12 arrival times)
+# H100 hardware comparison (all schedulers x 4 arrival times)
 bash experiments/crawler/run_scheduler_experiments.sh \
   experiments/crawler/configs/H100_enhanced_schedulers_v1_full all
 
 # --- ANNS experiments ---
 
-# H200 main experiment (all schedulers x 7 arrival times)
+# H200 main experiment (all schedulers x 4 arrival times)
 bash experiments/anns/run_scheduler_experiments.sh \
   experiments/anns/configs/H200_enhanced_schedulers_v1_full all
 
@@ -388,7 +388,7 @@ bash experiments/anns/run_scheduler_experiments.sh \
 bash experiments/anns/run_scheduler_experiments.sh \
   experiments/anns/configs/H200_enhanced_schedulers_v1_500q_delay_30_swap_only compare 0_5
 
-# H100 hardware comparison (all schedulers x 7 arrival times)
+# H100 hardware comparison (all schedulers x 4 arrival times)
 bash experiments/anns/run_scheduler_experiments.sh \
   experiments/anns/configs/H100_enhanced_schedulers_v1_full all
 
