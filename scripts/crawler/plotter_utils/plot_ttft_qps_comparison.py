@@ -195,8 +195,8 @@ def plot_ttft_qps_comparison(data: Dict, output_dir: str, percentile: float = 95
             rate_info = f" (QPS ≤ {max_rate})"
         else:
             rate_info = f" (QPS: {min_rate}-{max_rate})"
-    
-    fig.suptitle(f'TTFT Performance Comparison Across Schedulers{rate_info}',
+
+    fig.suptitle(f'Crawler Workload: TTFT vs QPS Comparison (Avg & P{int(percentile)}) Across Schedulers{rate_info}',
                  fontsize=20, fontweight='bold', y=0.98)
 
     # Create a consolidated legend from the first subplot

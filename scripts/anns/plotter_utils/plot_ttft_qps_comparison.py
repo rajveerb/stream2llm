@@ -249,7 +249,16 @@ def plot_ttft_qps_comparison_consolidated(data_by_delay_sched: Dict,
         ax2.tick_params(axis='both', which='major', labelsize=12)
 
     # Main title
-    fig.suptitle('TTFT Performance Comparison - ANNS Experiments',
+    rate_info = ""
+    if min_rate > 0 or max_rate != float('inf'):
+        if max_rate == float('inf'):
+            rate_info = f" (QPS ≥ {min_rate})"
+        elif min_rate == 0:
+            rate_info = f" (QPS ≤ {max_rate})"
+        else:
+            rate_info = f" (QPS: {min_rate}-{max_rate})"
+
+    fig.suptitle(f'ANNS Workload: TTFT vs QPS Comparison (Avg & P{int(percentile)}) Across Schedulers{rate_info}',
                  fontsize=20,
                  fontweight='bold')
 
@@ -263,7 +272,16 @@ def plot_ttft_qps_comparison_consolidated(data_by_delay_sched: Dict,
 
     # Save plot
     os.makedirs(output_dir, exist_ok=True)
-    filename = f'{output_prefix}.png'
+    # Generate filename with rate info, similar to crawler version
+    if min_rate > 0 or max_rate != float('inf'):
+        if max_rate == float('inf'):
+            filename = f'{output_prefix}_{min_rate}plus_qps.png'
+        elif min_rate == 0:
+            filename = f'{output_prefix}_0_{max_rate}_qps.png'
+        else:
+            filename = f'{output_prefix}_{min_rate}_{max_rate}_qps.png'
+    else:
+        filename = f'{output_prefix}.png'
     output_path = os.path.join(output_dir, filename)
     plt.savefig(output_path, bbox_inches='tight', dpi=300)
     plt.close()
