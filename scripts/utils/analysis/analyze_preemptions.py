@@ -102,31 +102,7 @@ def analyze_preemptions(log_dir, output_file):
             if len(concurrent) > 0:
                 f.write(f"{sched:<20} {concurrent.quantile(0.50):>7.0f}  {concurrent.quantile(0.95):>7.0f}  {concurrent.mean():>7.1f}\n")
 
-        f.write("\n" + "="*100 + "\n")
-        f.write("KEY INSIGHTS\n")
         f.write("="*100 + "\n")
-        f.write("\n✅ Finding 1: All preemptions target streaming requests only\n")
-        for sched, stats in results.items():
-            if stats['total_preempts'] > 0:
-                pct_streaming = (stats['streaming_total'] / stats['total_preempts']) * 100
-                f.write(f"   {sched}: {pct_streaming:.0f}% streaming\n")
-
-        f.write("\n✅ Finding 2: Enhanced schedulers use SWAP selectively\n")
-        for sched, stats in results.items():
-            if stats['total_preempts'] > 0:
-                swap_pct = (stats['swap'] / stats['total_preempts']) * 100
-                f.write(f"   {sched}: {swap_pct:.1f}% SWAP, {100-swap_pct:.1f}% RECOMPUTE\n")
-
-        f.write("\n✅ Finding 3: Preemption rates correlate with eviction policy\n")
-        f.write(f"   LCAS (3,486) - most aggressive, evicts old arrivals\n")
-        f.write(f"   MCPS (1,741) - most conservative, evicts low-progress requests\n")
-        f.write(f"   FCFS (1,575) - balanced approach\n")
-        f.write(f"   default_vllm (2,239) - baseline FIFO with LIFO eviction\n")
-
-        f.write("\n✅ Finding 4: All preemptions occur at similar high load\n")
-        avg_concurrent = sum(stats['concurrent_requests'].mean() for stats in results.values() if len(stats['concurrent_requests']) > 0) / len([s for s in results.values() if len(s['concurrent_requests']) > 0])
-        f.write(f"   Average concurrent requests at preemption: {avg_concurrent:.0f}\n")
-        f.write(f"   Indicates memory saturation point around 270-280 concurrent requests\n")
 
 
 if __name__ == "__main__":
