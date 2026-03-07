@@ -233,6 +233,89 @@ bash experiments/anns/generate_all_plots.sh \
 
 ---
 
+## Performance Model Data Collection
+
+The paper's cost-based scheduler uses performance models for recomputation and swap latency. Pre-computed data is available in `data/perf_model/`, but you can re-collect it on your own hardware.
+
+**Requirements:** Stream2LLM engine installed, NVIDIA GPU(s), HuggingFace token for gated model access.
+
+Collection scripts are in `experiments/perf_model/`. Each script initializes the vLLM engine, measures latencies across token counts (16–131072), and saves results as JSON.
+
+### Recomputation Latency
+
+Measures forward-pass latency at varying token budgets.
+
+```bash
+# H200 (TP=2)
+USE_RECOMPUTATION_LATENCY_PREDICTOR=1 \
+SAVE_RECOMPUTATION_DATA_PATH=data/perf_model/recomputation/H200_tp2_recomputation_latency.json \
+python experiments/perf_model/recomputation_latency_gen.py \
+  --model_name meta-llama/Meta-Llama-3.1-8B-Instruct \
+  --tensor_parallel_size 2 \
+  --max_num_batched_tokens 131072
+
+# H100 (TP=2)
+USE_RECOMPUTATION_LATENCY_PREDICTOR=1 \
+SAVE_RECOMPUTATION_DATA_PATH=data/perf_model/recomputation/H100_tp2_recomputation_latency.json \
+python experiments/perf_model/recomputation_latency_gen.py \
+  --model_name meta-llama/Meta-Llama-3.1-8B-Instruct \
+  --tensor_parallel_size 2 \
+  --max_num_batched_tokens 131072
+
+# A40 (TP=1)
+USE_RECOMPUTATION_LATENCY_PREDICTOR=1 \
+SAVE_RECOMPUTATION_DATA_PATH=data/perf_model/recomputation/A40_recomputation_latency.json \
+python experiments/perf_model/recomputation_latency_gen.py \
+  --model_name meta-llama/Meta-Llama-3.1-8B-Instruct \
+  --tensor_parallel_size 1 \
+  --max_num_batched_tokens 131072
+```
+
+### Swap Latency
+
+Measures GPU-CPU block transfer latency (swap-in + swap-out). Uses CUDA kernel implementation (`USE_SWAP_KERNEL=1`) for production measurements.
+
+```bash
+# H200 (TP=2)
+USE_SWAP_KERNEL=1 USE_SWAP_LATENCY_PREDICTOR=1 \
+SAVE_SWAP_LATENCY_DATA_PATH=data/perf_model/swap/H200_tp2_swap_kernel_latency.json \
+python experiments/perf_model/swap_latency_gen.py \
+  --model_name meta-llama/Meta-Llama-3.1-8B-Instruct \
+  --tensor_parallel_size 2 \
+  --gpu_memory_utilization 0.8 \
+  --max_num_batched_tokens 131072
+
+# H100 (TP=2)
+USE_SWAP_KERNEL=1 USE_SWAP_LATENCY_PREDICTOR=1 \
+SAVE_SWAP_LATENCY_DATA_PATH=data/perf_model/swap/H100_tp2_swap_kernel_latency.json \
+python experiments/perf_model/swap_latency_gen.py \
+  --model_name meta-llama/Meta-Llama-3.1-8B-Instruct \
+  --tensor_parallel_size 2 \
+  --gpu_memory_utilization 0.8 \
+  --max_num_batched_tokens 131072
+
+# A40 (TP=1)
+USE_SWAP_KERNEL=1 USE_SWAP_LATENCY_PREDICTOR=1 \
+SAVE_SWAP_LATENCY_DATA_PATH=data/perf_model/swap/A40_swap_kernel_latency.json \
+python experiments/perf_model/swap_latency_gen.py \
+  --model_name meta-llama/Meta-Llama-3.1-8B-Instruct \
+  --tensor_parallel_size 1 \
+  --gpu_memory_utilization 0.85 \
+  --max_num_batched_tokens 131072
+```
+
+### Environment Variables Reference
+
+| Variable | Description |
+|----------|-------------|
+| `USE_RECOMPUTATION_LATENCY_PREDICTOR` | Set to `1` to enable recomputation measurement |
+| `SAVE_RECOMPUTATION_DATA_PATH` | Output path for recomputation JSON |
+| `USE_SWAP_KERNEL` | Set to `1` for CUDA kernel swap (recommended) |
+| `USE_SWAP_LATENCY_PREDICTOR` | Set to `1` to enable swap measurement |
+| `SAVE_SWAP_LATENCY_DATA_PATH` | Output path for swap JSON |
+
+---
+
 ## SLURM Cluster Submission
 
 Batch job files are provided for running full experiment suites on SLURM-based HPC clusters. Each job runs all schedulers across all arrival times and generates plots.
