@@ -29,12 +29,6 @@ bash reproduce_artifacts.sh
 # Full sweep: ... all
 ```
 
-### Generate plots from run logs
-```bash
-bash experiments/crawler/generate_all_plots.sh <log_dir> [output_dir]
-bash experiments/anns/generate_all_plots.sh <log_dir> [output_dir]
-```
-
 ### Analysis scripts
 ```bash
 python scripts/utils/analysis/compute_scheduler_improvements.py --log-dir <log_dir> --output-dir tables --dataset-name <name> --max-qps <N>

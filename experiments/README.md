@@ -119,29 +119,6 @@ bash experiments/crawler/run_scheduler_experiments.sh \
   experiments/crawler/configs/H100_enhanced_schedulers_v1_full all
 ```
 
-### Generate Plots from Run Logs
-
-```bash
-# Syntax: bash experiments/crawler/generate_all_plots.sh <log_dir> [output_dir]
-
-# From pre-computed data (H200 main experiment)
-bash experiments/crawler/generate_all_plots.sh \
-  data/run_log/crawler/H200_enhanced_schedulers_v1_full
-
-# With custom output directory
-bash experiments/crawler/generate_all_plots.sh \
-  data/run_log/crawler/H200_enhanced_schedulers_v1_full \
-  experiments/crawler/analysis_results/H200_main
-
-# From H100 data
-bash experiments/crawler/generate_all_plots.sh \
-  data/run_log/crawler/H100_enhanced_schedulers_v1_full
-
-# From ablation data
-bash experiments/crawler/generate_all_plots.sh \
-  data/run_log/crawler/H200_enhanced_schedulers_v1_full_delay_10_recomp_only
-```
-
 ---
 
 ## ANNS Experiments
@@ -206,29 +183,6 @@ bash experiments/anns/run_scheduler_experiments.sh \
 ```bash
 bash experiments/anns/run_scheduler_experiments.sh \
   experiments/anns/configs/H100_enhanced_schedulers_v1_full all
-```
-
-### Generate Plots from Run Logs
-
-```bash
-# Syntax: bash experiments/anns/generate_all_plots.sh <log_dir> [output_dir]
-
-# From pre-computed data (H200 main experiment)
-bash experiments/anns/generate_all_plots.sh \
-  data/run_log/anns/H200_enhanced_schedulers_v1_full
-
-# With custom output directory
-bash experiments/anns/generate_all_plots.sh \
-  data/run_log/anns/H200_enhanced_schedulers_v1_full \
-  experiments/anns/analysis_results/H200_main
-
-# From H100 data
-bash experiments/anns/generate_all_plots.sh \
-  data/run_log/anns/H100_enhanced_schedulers_v1_full
-
-# From ablation data
-bash experiments/anns/generate_all_plots.sh \
-  data/run_log/anns/H200_enhanced_schedulers_v1_500q_delay_30_recomp_only
 ```
 
 ---
@@ -323,10 +277,10 @@ Batch job files are provided for running full experiment suites on SLURM-based H
 ### Main Experiments
 
 ```bash
-# H200 crawler — all schedulers x all arrival times (~48h)
+# H200 crawler — all schedulers x 4 arrival times (~48h)
 sbatch experiments/crawler/H200_batch_job_full.sbatch
 
-# H200 ANNS — all schedulers x all arrival times (~36h)
+# H200 ANNS — all schedulers x 4 arrival times (~36h)
 sbatch experiments/anns/H200_batch_job_full.sbatch
 
 # H100 crawler
@@ -336,18 +290,34 @@ sbatch experiments/crawler/H100_batch_job_full.sbatch
 sbatch experiments/anns/H100_batch_job_full.sbatch
 ```
 
+### Ablation Experiments
+
+```bash
+# Crawler delay + ablation (H200)
+sbatch experiments/crawler/H200_batch_job_delay_10.sbatch
+sbatch experiments/crawler/H200_batch_job_delay_10_recomp_only.sbatch
+sbatch experiments/crawler/H200_batch_job_delay_10_swap_only.sbatch
+
+# ANNS delay + ablation (H200)
+sbatch experiments/anns/H200_batch_job_delay_30.sbatch
+sbatch experiments/anns/H200_batch_job_delay_30_recomp_only.sbatch
+sbatch experiments/anns/H200_batch_job_delay_30_swap_only.sbatch
+```
+
 ### Available Batch Jobs
 
 | File | Hardware | Workload | Description |
 |------|----------|----------|-------------|
-| `crawler/H200_batch_job_full.sbatch` | 2x H200 | Crawler | Main experiment, all schedulers |
-| `crawler/H100_batch_job_full.sbatch` | 2x H100 | Crawler | Main experiment, all schedulers |
-| `anns/H200_batch_job_full.sbatch` | 2x H200 | ANNS | Main experiment, all schedulers |
-| `anns/H100_batch_job_full.sbatch` | 2x H100 | ANNS | Main experiment, all schedulers |
-| `anns/H200_batch_job_500q.sbatch` | 2x H200 | ANNS | 500-query variant |
-| `anns/H100_batch_job_500q.sbatch` | 2x H100 | ANNS | 500-query variant |
-| `anns/H200_batch_job_500q_delay_5.sbatch` | 2x H200 | ANNS | 500-query with 5x delay |
-| `anns/H100_batch_job_500q_delay_5.sbatch` | 2x H100 | ANNS | 500-query with 5x delay |
+| `crawler/H200_batch_job_full.sbatch` | 2x H200 | Crawler | Main experiment, all schedulers x 4 arrival times |
+| `crawler/H100_batch_job_full.sbatch` | 2x H100 | Crawler | Hardware comparison, all schedulers x 4 arrival times |
+| `crawler/H200_batch_job_delay_10.sbatch` | 2x H200 | Crawler | 10x delay (memory pressure), all schedulers at QPS 4 |
+| `crawler/H200_batch_job_delay_10_recomp_only.sbatch` | 2x H200 | Crawler | Recomp-only ablation, all schedulers at QPS 4 |
+| `crawler/H200_batch_job_delay_10_swap_only.sbatch` | 2x H200 | Crawler | Swap-only ablation, all schedulers at QPS 4 |
+| `anns/H200_batch_job_full.sbatch` | 2x H200 | ANNS | Main experiment, all schedulers x 4 arrival times |
+| `anns/H100_batch_job_full.sbatch` | 2x H100 | ANNS | Hardware comparison, all schedulers x 4 arrival times |
+| `anns/H200_batch_job_delay_30.sbatch` | 2x H200 | ANNS | 30x delay (memory pressure), all schedulers at QPS 2 |
+| `anns/H200_batch_job_delay_30_recomp_only.sbatch` | 2x H200 | ANNS | Recomp-only ablation, all schedulers at QPS 2 |
+| `anns/H200_batch_job_delay_30_swap_only.sbatch` | 2x H200 | ANNS | Swap-only ablation, all schedulers at QPS 2 |
 
 ---
 
@@ -392,16 +362,7 @@ bash experiments/anns/run_scheduler_experiments.sh \
 bash experiments/anns/run_scheduler_experiments.sh \
   experiments/anns/configs/H100_enhanced_schedulers_v1_full all
 
-# --- Generate all plots ---
 
-bash experiments/crawler/generate_all_plots.sh data/run_log/crawler/H200_enhanced_schedulers_v1_full
-bash experiments/crawler/generate_all_plots.sh data/run_log/crawler/H200_enhanced_schedulers_v1_full_delay_10
-bash experiments/crawler/generate_all_plots.sh data/run_log/crawler/H200_enhanced_schedulers_v1_full_delay_10_recomp_only
-bash experiments/crawler/generate_all_plots.sh data/run_log/crawler/H200_enhanced_schedulers_v1_full_delay_10_swap_only
-bash experiments/crawler/generate_all_plots.sh data/run_log/crawler/H100_enhanced_schedulers_v1_full
-bash experiments/anns/generate_all_plots.sh data/run_log/anns/H200_enhanced_schedulers_v1_full
-bash experiments/anns/generate_all_plots.sh data/run_log/anns/H200_enhanced_schedulers_v1_500q_delay_30
-bash experiments/anns/generate_all_plots.sh data/run_log/anns/H200_enhanced_schedulers_v1_500q_delay_30_recomp_only
-bash experiments/anns/generate_all_plots.sh data/run_log/anns/H200_enhanced_schedulers_v1_500q_delay_30_swap_only
-bash experiments/anns/generate_all_plots.sh data/run_log/anns/H100_enhanced_schedulers_v1_full
+# --- Generate paper figures ---
+# Use reproduce_artifacts.sh from the repository root to generate all paper figures and tables
 ```
