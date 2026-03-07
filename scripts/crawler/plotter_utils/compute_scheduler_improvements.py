@@ -137,6 +137,10 @@ def main(argv: Sequence[str] | None = None):
                         type=str,
                         default="",
                         help="Name of dataset for output file")
+    parser.add_argument("--max-qps",
+                        type=float,
+                        default=None,
+                        help="Maximum QPS to include in output")
     args = parser.parse_args(argv)
 
     csv_files = list(args.log_dir.rglob("run_metrics.csv"))
@@ -149,6 +153,8 @@ def main(argv: Sequence[str] | None = None):
 
     # Get all QPS values
     all_qps = sorted({q for sched in data.values() for q in sched})
+    if args.max_qps is not None:
+        all_qps = [q for q in all_qps if q <= args.max_qps]
 
     # Prepare output
     args.output_dir.mkdir(parents=True, exist_ok=True)
