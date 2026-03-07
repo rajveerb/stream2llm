@@ -27,7 +27,7 @@ def analyze_preemptions(log_dir, output_file):
     """Analyze preemption statistics across all schedulers."""
 
     base_dir = log_dir
-    schedulers = ["default_vllm", "fcfs_lru", "lcas_cplusp", "mcps_lce"]
+    schedulers = ["default_vllm", "fcfs", "lcas", "mcps"]
 
     results = {}
 

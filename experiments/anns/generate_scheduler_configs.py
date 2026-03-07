@@ -16,7 +16,7 @@ def create_anns_config(scheduler: str,
     Create ANNS config dictionary for a specific scheduler and arrival time.
 
     Args:
-        scheduler: Scheduler type (default_vllm, fcfs_lru, lcas_cplusp, mcps_lce)
+        scheduler: Scheduler type (default_vllm, fcfs, lcas, mcps)
         arrival_time: Average inter-arrival time in seconds
         hardware: Hardware type (H200, H100)
         query_range: Number of queries to process
@@ -111,7 +111,7 @@ def save_config(config: Dict[str, Any],
 
 def main():
     # Configuration parameters
-    schedulers = ['default_vllm', 'fcfs_lru', 'lcas_cplusp', 'mcps_lce']
+    schedulers = ['default_vllm', 'fcfs', 'lcas', 'mcps']
     arrival_times = [4, 2, 1, 0.5, 0.25, 0.125,
                      0.0625]  # Inter-arrival times in seconds
     query_range = 500

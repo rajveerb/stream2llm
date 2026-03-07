@@ -39,10 +39,9 @@ Experiment configs write output directly to `data/run_log/`, so the same plot co
 | Scheduler | Crawler | ANNS | Description |
 |-----------|---------|------|-------------|
 | `default_vllm` | Yes | Yes | Unmodified vLLM baseline |
-| `fcfs_lru` | Yes | Yes | First-come-first-served with LRU eviction |
-| `lcas_cplusp` | Yes | Yes | Least-context-aware scheduling with C+P priority |
-| `mcps_lce` | Yes | Yes | Most-computed-prefix scheduling with least-cache eviction |
-| `oeda_pbas` | Yes | No | Oldest-earliest-deadline-aware with priority-based allocation (crawler `*_full` configs only) |
+| `fcfs` | Yes | Yes | First-come-first-served with LRU eviction |
+| `lcas` | Yes | Yes | Least-context-aware scheduling with C+P priority |
+| `mcps` | Yes | Yes | Most-computed-prefix scheduling with least-cache eviction |
 
 ### Available Arrival Times
 
@@ -85,9 +84,9 @@ bash experiments/crawler/run_scheduler_experiments.sh \
 ```bash
 # Syntax: bash experiments/crawler/run_scheduler_experiments.sh <config_dir> scheduler <scheduler>
 
-# Example: run fcfs_lru at all arrival times on H200
+# Example: run fcfs at all arrival times on H200
 bash experiments/crawler/run_scheduler_experiments.sh \
-  experiments/crawler/configs/H200_enhanced_schedulers_v1_full scheduler fcfs_lru
+  experiments/crawler/configs/H200_enhanced_schedulers_v1_full scheduler fcfs
 ```
 
 ### Run All Experiments (All Schedulers x All Arrival Times)
@@ -174,9 +173,9 @@ bash experiments/anns/run_scheduler_experiments.sh \
 ```bash
 # Syntax: bash experiments/anns/run_scheduler_experiments.sh <config_dir> scheduler <scheduler>
 
-# Example: run mcps_lce at all arrival times on H200
+# Example: run mcps at all arrival times on H200
 bash experiments/anns/run_scheduler_experiments.sh \
-  experiments/anns/configs/H200_enhanced_schedulers_v1_full scheduler mcps_lce
+  experiments/anns/configs/H200_enhanced_schedulers_v1_full scheduler mcps
 ```
 
 ### Run All Experiments (All Schedulers x All Arrival Times)

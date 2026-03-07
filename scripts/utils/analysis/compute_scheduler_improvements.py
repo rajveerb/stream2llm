@@ -20,8 +20,8 @@ import yaml
 
 SCHEDULERS: Tuple[str,
                   ...] = ("recomp", "swap", "recomp_and_swap", "default_vllm",
-                          "fcfs_lru", "lcas_lifo", "mcps_lce",
-                          "stream_based_v1", "lcas_cplusp")
+                          "fcfs", "mcps",
+                          "lcas")
 
 TTFTArray = np.ndarray
 
@@ -77,9 +77,6 @@ def _dataset(csv_files: Sequence[Path]):
         try:
             qps_val = _qps(f.parent)
             sched = _sched(f.parent)
-            # Skip oeda_pbas
-            if sched == "oeda_pbas":
-                continue
             s, ns = _extract(f)
             data[sched][qps_val]["streaming"].extend(s.tolist())
             data[sched][qps_val]["non_streaming"].extend(ns.tolist())
@@ -92,10 +89,9 @@ def _get_display_name(sched: str) -> str:
     """Convert scheduler name to display name."""
     display_names = {
         "default_vllm": "Default vLLM",
-        "fcfs_lru": "FCFS",
-        "lcas_lifo": "LCAS",
-        "lcas_cplusp": "LCAS",
-        "mcps_lce": "MCPS",
+        "fcfs": "FCFS",
+        "lcas": "LCAS",
+        "mcps": "MCPS",
     }
     return display_names.get(sched, sched.replace('_', ' ').title())
 

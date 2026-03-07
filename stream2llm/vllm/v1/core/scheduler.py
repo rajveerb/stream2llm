@@ -85,8 +85,8 @@ class Scheduler:
 
         # Validate scheduler algorithm
         valid_algorithms = [
-            "default_vllm", "stream_based_v1", "fcfs_lru", "lcas_lifo",
-            "mcps_lce", "oeda_pbas", "lcas_cplusp"
+            "default_vllm", "fcfs",
+            "mcps", "lcas"
         ]
 
         assert self.scheduler_algorithm in valid_algorithms, "Scheduling algorithm is not supported yet. Pick from the following: " + ", ".join(
@@ -161,31 +161,7 @@ class Scheduler:
         self.allow_swap = False
         logger.info("Default preemption strategy set to always recompute.")
 
-    def _sort_requests_stream_based_v1(self, ) -> List[Request]:
-        # Get all unfinished requests from waiting and running lists
-        unfinished_reqs = [
-            req for req in (list(self.waiting) + self.running)
-            if not req.is_finished()
-        ]
-        # Removed duplicate line
-        all_requests = set(unfinished_reqs)
-
-        ordered_reqs: List[Request] = []
-
-        # sort by streaming prompt requests that have finished streaming or non-streaming requests
-        for req in unfinished_reqs:
-            if req.check_is_streaming_prompt():
-                if req.check_is_streaming_prompt_finished():
-                    ordered_reqs.append(req)
-                    all_requests.remove(req)
-            else:
-                ordered_reqs.append(req)
-                all_requests.remove(req)
-        # sort by arrival time of full prompt requests
-        ordered_reqs.sort(key=lambda x: x.arrival_time)
-        return ordered_reqs
-
-    def _sort_requests_lcas_cplusp(self, ) -> List[Request]:
+    def _sort_requests_lcas(self, ) -> List[Request]:
         """
         Last Chunk Arrival Scheduling with Complete and then Partial Requests
         Schedules requests in order of the latest observed chunk arrival time (most recent first)
@@ -243,10 +219,7 @@ class Scheduler:
             if new_blocks is None:
                 # The request cannot be scheduled.
                 # Preempt the request with oldest activity (longest time since last chunk/arrival)
-                if self.scheduler_algorithm == "stream_based_v1":
-                    preempted_req = self._select_request_for_preemption()
-                    self.running.remove(preempted_req)
-                elif self.scheduler_algorithm == "default_vllm":
+                if self.scheduler_algorithm == "default_vllm":
                     # Default: preempt the lowest-priority request (LIFO)
                     preempted_req = self.running.pop()
                 else:
@@ -313,48 +286,10 @@ class Scheduler:
 
 # This file contains the missing method and algorithm additions for the original scheduler
 
-    def _select_request_for_preemption(self) -> Optional[Request]:
+    # ========== POLICY 1: FCFS ========== CHECKED
+    def _sort_requests_fcfs(self) -> List[Request]:
         """
-        Select request for preemption based on current scheduling algorithm
-        """
-        if not self.running:
-            return None
-
-        if self.scheduler_algorithm == "fcfs_lru":
-            return self._evict_lru()
-        elif self.scheduler_algorithm == "lcas_lifo":
-            return self._evict_lifo()
-        elif self.scheduler_algorithm == "mcps_lce":
-            return self._evict_lce()
-        elif self.scheduler_algorithm == "oeda_pbas":
-            return self._evict_oeda()
-        elif self.scheduler_algorithm == "stream_based_v1":
-            return self._evict_stream_based_v1()
-        elif self.scheduler_algorithm == "lcas_cplusp":
-            return self._evict_lcas_cplusp()
-        else:
-            # Default eviction: oldest activity time
-            oldest_activity_time = float('inf')
-            evict_candidate = None
-
-            for req in self.running:
-                if req.check_is_streaming_prompt() and hasattr(
-                        req, 'last_chunk_arrival_time'
-                ) and req.last_chunk_arrival_time is not None:
-                    last_activity_time = req.last_chunk_arrival_time
-                else:
-                    last_activity_time = req.arrival_time
-
-                if last_activity_time < oldest_activity_time:
-                    oldest_activity_time = last_activity_time
-                    evict_candidate = req
-
-            return evict_candidate
-
-    # ========== POLICY 1: FCFS-LRU ========== CHECKED
-    def _sort_requests_fcfs_lru(self) -> List[Request]:
-        """
-        First-Come-First-Served with Least-Recently-Used Eviction (FCFS-LRU)
+        First-Come-First-Served with Least-Recently-Used Eviction (FCFS)
         Schedules full requests in arrival order, with partial requests filled opportunistically
         """
         # Separate full and partial requests
@@ -388,28 +323,10 @@ class Scheduler:
         # Full requests get priority, then partial requests
         return full_requests + partial_requests
 
-    # ========== POLICY 2: LCAS-LIFO ========== CHECKED
-    def _sort_requests_lcas_lifo(self) -> List[Request]:
+    # ========== POLICY 3: MCPS ========== CHECKED
+    def _sort_requests_mcps(self) -> List[Request]:
         """
-        Last Chunk Arrival Scheduling with LIFO Eviction (LCAS-LIFO)
-        Schedules requests in order of the latest observed chunk arrival time (most recent first)
-        """
-        # Get all unfinished requests from waiting and running lists
-        all_requests = [
-            req for req in (list(self.waiting) + self.running)
-            if not req.is_finished()
-        ]
-
-        tokens_to_compute_cond = lambda req: req.num_tokens_with_spec - req.num_computed_tokens > 0
-        # Sort by most recent chunk arrival time first
-        all_requests.sort(key=lambda req: req.last_chunk_arrival_time
-                          if tokens_to_compute_cond(req) else float('inf'), )
-        return all_requests
-
-    # ========== POLICY 3: MCPS-LCE ========== CHECKED
-    def _sort_requests_mcps_lce(self) -> List[Request]:
-        """
-        Most Chunks Processed Scheduling with Least Chunks Eviction (MCPS-LCE)
+        Most Chunks Processed Scheduling with Least Chunks Eviction (MCPS)
         Prioritizes requests by the number of chunks processed (most first)
         """
         # Get all unfinished requests from waiting and running lists
@@ -429,55 +346,6 @@ class Scheduler:
         all_requests.sort(key=get_sort_key)
         return all_requests
 
-    # ========== POLICY 4: OEDA-PBAS ==========
-    def _sort_requests_oeda_pbas(self) -> List[Request]:
-        """
-        Overlap-Enhanced Deadline-Aware Priority-Based Adaptive Scheduling (OEDA-PBAS)
-        Schedules by urgency and partial readiness
-        """
-        current_time = time.time()
-        # Get all unfinished requests from waiting and running lists
-        all_requests = [
-            req for req in (list(self.waiting) + self.running)
-            if not req.is_finished()
-        ]
-
-        def calculate_oeda_priority(req):
-            # Urgency calculation
-            time_since_first_chunk = current_time - req.arrival_time
-
-            # Assume SLO deadline is 2x expected processing time from arrival
-            expected_processing_time = max(
-                0.01,
-                req.num_computed_tokens / 100.0)  # ~100 tokens/sec, avoid zero
-            slo_deadline = req.arrival_time + (2.0 * expected_processing_time)
-            time_to_deadline = max(0, slo_deadline - current_time)
-
-            # Higher urgency for requests closer to deadline
-            urgency = max(
-                0,
-                1.0 - (time_to_deadline / max(expected_processing_time, 0.01)))
-
-            # Partial readiness calculation
-            if req.num_tokens_with_spec > 0:
-                partial_readiness = req.num_computed_tokens / max(
-                    req.num_tokens_with_spec, 1)
-            else:
-                partial_readiness = 0.0
-
-            # Streaming bonus for partial requests
-            streaming_bonus = 0.0
-            if req.check_is_streaming_prompt(
-            ) and not req.check_is_streaming_prompt_finished():
-                streaming_bonus = 0.3  # Boost for active streaming requests
-
-            # Combined priority (lower value = higher priority)
-            priority = -(urgency + partial_readiness + streaming_bonus)
-            return priority
-
-        all_requests.sort(key=calculate_oeda_priority)
-        return all_requests
-
     def _get_sorted_requests_by_algorithm(self) -> List[Request]:
         """
         Get requests sorted by the selected algorithm
@@ -488,18 +356,12 @@ class Scheduler:
             if not req.is_finished()
         ]
 
-        if self.scheduler_algorithm == "fcfs_lru":
-            return self._sort_requests_fcfs_lru()
-        elif self.scheduler_algorithm == "lcas_lifo":
-            return self._sort_requests_lcas_lifo()
-        elif self.scheduler_algorithm == "mcps_lce":
-            return self._sort_requests_mcps_lce()
-        elif self.scheduler_algorithm == "oeda_pbas":
-            return self._sort_requests_oeda_pbas()
-        elif self.scheduler_algorithm == "stream_based_v1":
-            return self._sort_requests_stream_based_v1()
-        elif self.scheduler_algorithm == "lcas_cplusp":
-            return self._sort_requests_lcas_cplusp()
+        if self.scheduler_algorithm == "fcfs":
+            return self._sort_requests_fcfs()
+        elif self.scheduler_algorithm == "mcps":
+            return self._sort_requests_mcps()
+        elif self.scheduler_algorithm == "lcas":
+            return self._sort_requests_lcas()
 
     def schedule(self) -> SchedulerOutput:
         # NOTE(woosuk) on the scheduling algorithm:

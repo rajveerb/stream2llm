@@ -5,7 +5,7 @@ Generate a combined figure with 4 CCDF subplots (QPS 0.5, 1.0, 2.0, 4.0).
 Creates a 1x4 subplot layout showing all schedulers at different QPS values,
 using inverted log-scale CCDF visualization for tail latency comparison.
 Each scheduler gets a unique color with solid lines for streaming and
-dashed lines for non-streaming. Excludes oeda_pbas scheduler.
+dashed lines for non-streaming.
 """
 from __future__ import annotations
 
@@ -21,20 +21,18 @@ import yaml
 
 SCHEDULERS: Tuple[str,
                   ...] = ("recomp", "swap", "recomp_and_swap", "default_vllm",
-                          "fcfs_lru", "lcas_lifo", "mcps_lce",
-                          "stream_based_v1", "lcas_cplusp")
+                          "fcfs", "mcps",
+                          "lcas")
 
 # Color palette for schedulers
 SCHEDULER_COLORS: dict[str, str] = {
     "default_vllm": "#1f77b4",
-    "fcfs_lru": "#ff7f0e",
-    "lcas_lifo": "#2ca02c",
-    "mcps_lce": "#9467bd",
-    "stream_based_v1": "#e377c2",
+    "fcfs": "#ff7f0e",
+    "mcps": "#9467bd",
     "recomp": "#7f7f7f",
     "swap": "#bcbd22",
     "recomp_and_swap": "#17becf",
-    "lcas_cplusp": "#d62728",
+    "lcas": "#d62728",
 }
 
 TTFTArray = np.ndarray
@@ -92,9 +90,6 @@ def _dataset(csv_files: Sequence[Path]):
         try:
             qps_val = _qps(f.parent)
             sched = _sched(f.parent)
-            # Skip oeda_pbas
-            if sched == "oeda_pbas":
-                continue
             s, ns = _extract(f)
             data[sched][qps_val]["streaming"].extend(s.tolist())
             data[sched][qps_val]["non_streaming"].extend(ns.tolist())
@@ -117,10 +112,9 @@ def _get_display_name(sched: str) -> str:
     """Convert scheduler name to display name."""
     display_names = {
         "default_vllm": "Default vLLM",
-        "fcfs_lru": "FCFS",
-        "lcas_lifo": "LCAS",
-        "lcas_cplusp": "LCAS",
-        "mcps_lce": "MCPS",
+        "fcfs": "FCFS",
+        "lcas": "LCAS",
+        "mcps": "MCPS",
     }
     return display_names.get(sched, sched.replace('_', ' ').title())
 
@@ -229,7 +223,7 @@ def _combined_plot_1x4(data, out_dir: Path, hardware: str = "H200", output_prefi
 def main(argv: Sequence[str] | None = None):
     parser = argparse.ArgumentParser(
         description=
-        "Generate a 1x4 combined CCDF plot showing QPS 0.5, 1.0, 2.0, 4.0 (except oeda_pbas)")
+        "Generate a 1x4 combined CCDF plot showing QPS 0.5, 1.0, 2.0, 4.0 ")
     parser.add_argument("--log-dir", required=True, type=Path)
     parser.add_argument("--output-dir",
                         default=Path("ttft_ccdf_combined"),

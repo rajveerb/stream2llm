@@ -17,7 +17,7 @@ else
 fi
 
 # Configuration
-SCHEDULERS=("default_vllm" "fcfs_lru" "lcas_cplusp" "mcps_lce")
+SCHEDULERS=("default_vllm" "fcfs" "lcas" "mcps")
 ARRIVAL_TIMES=("0_0625" "0_125" "0_25" "0_5" "1" "2" "4")
 
 # Colors for output
@@ -193,16 +193,16 @@ COMMANDS:
 
 EXAMPLES:
     $0 experiments/anns/configs all                        # Run everything (will take a long time!)
-    $0 experiments/anns/configs scheduler fcfs_lru         # Run all experiments for FCFS-LRU
-    $0 experiments/anns/configs single mcps_lce 4          # Run MCPS-LCE at 4 QPS
+    $0 experiments/anns/configs scheduler fcfs         # Run all experiments for FCFS
+    $0 experiments/anns/configs single mcps 4          # Run MCPS at 4 QPS
     $0 experiments/anns/configs compare 1                  # Compare all schedulers at 1 QPS
     $0 experiments/anns/configs configs                    # List all available configurations
 
 AVAILABLE SCHEDULERS:
     default_vllm     - Standard vLLM scheduler
-    fcfs_lru         - First-Come-First-Served with LRU eviction
-    lcas_cplusp      - Last Chunk Arrival with C++ eviction
-    mcps_lce         - Most Chunks Processed with Least Chunks eviction
+    fcfs         - First-Come-First-Served with LRU eviction
+    lcas      - Last Chunk Arrival with C++ eviction
+    mcps         - Most Chunks Processed with Least Chunks eviction
 
 QPS LOADS:
     0.25 QPS     0.5 QPS     1 QPS      2 QPS

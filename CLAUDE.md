@@ -55,7 +55,7 @@ python scripts/utils/analysis/analyze_preemptions.py --log-dir <log_dir> --outpu
 
 ## Scheduler Variants
 
-Schedulers tested: `default_vllm`, `fcfs_lru`, `lcas_cplusp`, `mcps_lce`, `oeda_pbas` (crawler-only). Config naming: `*_full` = all mechanisms, `*_delay_N` = artificial delay, `*_recomp_only` / `*_swap_only` = ablations.
+Schedulers tested: `default_vllm`, `fcfs`, `lcas`, `mcps`. Config naming: `*_full` = all mechanisms, `*_delay_N` = artificial delay, `*_recomp_only` / `*_swap_only` = ablations.
 
 ## Data Conventions
 

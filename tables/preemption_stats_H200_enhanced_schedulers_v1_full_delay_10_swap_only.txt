@@ -8,9 +8,9 @@ PREEMPTION COUNTS BY SCHEDULER
 Scheduler            PREEMPTED Events     RECOMPUTE       SWAP            Swap %     Streaming?
 ----------------------------------------------------------------------------------------------------
 default_vllm         779                  0               779               100.0%  100%      
-fcfs_lru             709                  0               709               100.0%  100%      
-lcas_cplusp          1049                 0               1049              100.0%  100%      
-mcps_lce             721                  0               721               100.0%  100%      
+fcfs                 709                  0               709               100.0%  100%      
+lcas                 1049                 0               1049              100.0%  100%      
+mcps                 721                  0               721               100.0%  100%      
 
 ====================================================================================================
 PREEMPTION BREAKDOWN: STREAMING vs NON-STREAMING
@@ -18,9 +18,9 @@ PREEMPTION BREAKDOWN: STREAMING vs NON-STREAMING
 Scheduler            Streaming Events     Non-Streaming Events
 ----------------------------------------------------------------------------------------------------
 default_vllm         779                  0                   
-fcfs_lru             709                  0                   
-lcas_cplusp          1049                 0                   
-mcps_lce             721                  0                   
+fcfs                 709                  0                   
+lcas                 1049                 0                   
+mcps                 721                  0                   
 
 ====================================================================================================
 MEMORY PRESSURE AT PREEMPTION TIME (Concurrent Requests)
@@ -28,7 +28,7 @@ MEMORY PRESSURE AT PREEMPTION TIME (Concurrent Requests)
 Scheduler            P50        P95        Mean      
 ----------------------------------------------------------------------------------------------------
 default_vllm             286      323    269.5
-fcfs_lru                 283      307    266.4
-lcas_cplusp              277      307    266.9
-mcps_lce                 287      326    271.3
+fcfs                     283      307    266.4
+lcas                     277      307    266.9
+mcps                     287      326    271.3
 ====================================================================================================

@@ -19,9 +19,9 @@ def simplify_scheduler_name(scheduler: str) -> str:
     """Simplify scheduler name for display in plots."""
     name_mapping = {
         'default_vllm': 'Default vLLM',
-        'fcfs_lru': 'FCFS',
-        'lcas_cplusp': 'LCAS',
-        'mcps_lce': 'MCPS',
+        'fcfs': 'FCFS',
+        'lcas': 'LCAS',
+        'mcps': 'MCPS',
     }
     return name_mapping.get(scheduler, scheduler)
 

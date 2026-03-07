@@ -18,7 +18,7 @@ fi
 
 # Configuration
 #BASE_CONFIG_DIR set above
-SCHEDULERS=("default_vllm" "fcfs_lru" "lcas_lifo" "mcps_lce" "oeda_pbas" "stream_based_v1" "lcas_cplusp")
+SCHEDULERS=("default_vllm" "fcfs" "mcps" "lcas")
 ARRIVAL_TIMES=("0_0625" "0_125" "0_25" "0_5" "1" "2" "4" "8" "16" "32")
 
 # Colors for output
@@ -187,18 +187,14 @@ COMMANDS:
 
 EXAMPLES:
     $0 <config_dir> all                        # Run everything (will take a long time!)
-    $0 <config_dir> scheduler fcfs_lru         # Run all experiments for FCFS-LRU
-    $0 <config_dir> single oeda_pbas 0_125     # Run OEDA-PBAS at 8 QPS (0.125s arrival)
+    $0 <config_dir> scheduler fcfs         # Run all experiments for FCFS
     $0 <config_dir> compare 0_25               # Compare all schedulers at 4 QPS
     $0 <config_dir> configs                    # List all available configurations
 
 AVAILABLE SCHEDULERS:
     default_vllm     - Standard vLLM scheduler
-    fcfs_lru         - First-Come-First-Served with LRU eviction
-    lcas_lifo        - Last Chunk Arrival with LIFO eviction  
-    mcps_lce         - Most Chunks Processed with Least Chunks eviction
-    oeda_pbas        - Deadline-aware priority-based scheduling
-    stream_based_v1  - Stream-aware scheduling
+    fcfs         - First-Come-First-Served with LRU eviction
+    mcps         - Most Chunks Processed with Least Chunks eviction
 
 ARRIVAL TIMES (seconds -> QPS):
     0_0625 or 0.0625 -> 16 QPS    0_125 or 0.125 -> 8 QPS     0_25 or 0.25 -> 4 QPS      

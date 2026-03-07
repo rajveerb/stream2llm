@@ -29,9 +29,9 @@ def simplify_scheduler_name(scheduler: str) -> str:
     """Simplify scheduler name for display in plots."""
     name_mapping = {
         'default_vllm': 'Default vLLM',
-        'fcfs_lru': 'FCFS',
-        'lcas_cplusp': 'LCAS',
-        'mcps_lce': 'MCPS',
+        'fcfs': 'FCFS',
+        'lcas': 'LCAS',
+        'mcps': 'MCPS',
     }
     return name_mapping.get(scheduler, scheduler)
 
@@ -147,9 +147,9 @@ def plot_ttft_qps_comparison_consolidated(data_by_delay_sched: Dict,
     # Define markers for different schedulers (use default colors)
     scheduler_markers = {
         'default_vllm': 'o',
-        'fcfs_lru': 's',
-        'lcas_cplusp': '^',
-        'mcps_lce': 'D',
+        'fcfs': 's',
+        'lcas': '^',
+        'mcps': 'D',
     }
 
     for delay_idx, delay_mult in enumerate(sorted_delays):

@@ -32,20 +32,18 @@ import yaml
 
 SCHEDULERS: Tuple[str,
                   ...] = ("recomp", "swap", "recomp_and_swap", "default_vllm",
-                          "fcfs_lru", "lcas_lifo", "mcps_lce",
-                          "stream_based_v1", "lcas_cplusp")
+                          "fcfs", "mcps",
+                          "lcas")
 
 # Color palette for schedulers
 SCHEDULER_COLORS: dict[str, str] = {
     "default_vllm": "#1f77b4",
-    "fcfs_lru": "#ff7f0e",
-    "lcas_lifo": "#2ca02c",
-    "mcps_lce": "#9467bd",
-    "stream_based_v1": "#e377c2",
+    "fcfs": "#ff7f0e",
+    "mcps": "#9467bd",
     "recomp": "#7f7f7f",
     "swap": "#bcbd22",
     "recomp_and_swap": "#17becf",
-    "lcas_cplusp": "#d62728",
+    "lcas": "#d62728",
 }
 
 
@@ -122,10 +120,6 @@ def _dataset(csv_files: Sequence[Path], min_qps: float = 0, max_qps: float = flo
             if not (min_qps <= qps_val <= max_qps):
                 continue
             sched = _sched(f.parent)
-            # Skip oeda_pbas
-            if sched == "oeda_pbas":
-                continue
-
             result = _extract_trace_completion_time(f)
             if result:
                 streaming_time, non_streaming_time = result
@@ -142,10 +136,9 @@ def _get_display_name(sched: str) -> str:
     """Convert scheduler name to display name."""
     display_names = {
         "default_vllm": "Default vLLM",
-        "fcfs_lru": "FCFS",
-        "lcas_lifo": "LCAS",
-        "lcas_cplusp": "LCAS",
-        "mcps_lce": "MCPS",
+        "fcfs": "FCFS",
+        "lcas": "LCAS",
+        "mcps": "MCPS",
     }
     return display_names.get(sched, sched.replace('_', ' ').title())
 
