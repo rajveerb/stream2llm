@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Reproducibility artifact for the Stream2LLM paper (*Streaming Prompt Inference for LLM Serving*). Contains scripts, data, and pre-built figures to reproduce every figure, table, and inline number in the paper. The `stream2llm/` directory is a modified vLLM engine with streaming input support.
+MLSys 2026 artifact evaluation for the paper *Stream2LLM: Overlap Context Streaming and Prefill for Reduced Time-to-First-Token*. Contains scripts, data, and pre-built figures to reproduce every figure, table, and inline number in the paper. The `stream2llm/` directory is a modified vLLM engine with streaming input support. The `data/` directory is a git submodule (HuggingFace dataset) that holds all large data for the artifact.
 
 ## Setup
 

@@ -1,14 +1,14 @@
 # Stream2LLM Artifact
 
-Reproducibility artifact for the Stream2LLM paper: *Streaming Prompt Inference for LLM Serving*.
+Artifact for the MLSys 2026 artifact evaluation process for the paper: *Stream2LLM: Overlap Context Streaming and Prefill for Reduced Time-to-First-Token*.
 
 This repository contains all scripts, data, and pre-built figures needed to reproduce every figure, table, and inline number in the paper.
 
 ## Quick Start
 
 ```bash
-# Clone with data submodule
-git clone --recurse-submodules https://github.com/rajveerb/stream2llm.git
+# Clone the mlsys_artifact branch with data submodule
+git clone --recurse-submodules -b mlsys_artifact https://github.com/rajveerb/stream2llm.git
 cd stream2llm
 
 # Create and activate conda environment
@@ -28,7 +28,7 @@ huggingface-cli login
 |-----------|----------|
 | `stream2llm/` | Modified vLLM engine with streaming input support |
 | `experiments/` | Experiment driver scripts, configs, and SLURM job files |
-| `data/` | HuggingFace submodule with all large data (run logs, workload traces, perf models) |
+| `data/` | Git submodule ([HuggingFace dataset](https://huggingface.co/datasets/rbachkaniwala3/stream2llm-data)) with all large data (run logs, workload traces, perf models). Clone with `--recurse-submodules` or run `git submodule update --init` after cloning. |
 | `scripts/` | Plotting and analysis scripts |
 | `figures/` | Generated plots and figures from the paper |
 | `figures/reference/` | Pre-built reference figures from the paper (for comparison) |
@@ -125,7 +125,7 @@ See [`experiments/README.md`](experiments/README.md) for detailed instructions w
 
 ## Data Organization
 
-The `data/` submodule ([rbachkaniwala3/stream2llm-data](https://huggingface.co/datasets/rbachkaniwala3/stream2llm-data)) contains:
+The `data/` directory is a git submodule hosted on HuggingFace ([rbachkaniwala3/stream2llm-data](https://huggingface.co/datasets/rbachkaniwala3/stream2llm-data)). It must be initialized before use — either clone with `--recurse-submodules` or run `git submodule update --init` after cloning. It contains:
 
 - **`run_log/crawler/`** and **`run_log/anns/`**: Experiment run logs (`run_metrics.csv` + `config_*.yaml`) for 10 configurations across H200 and H100 hardware
 - **`anns/`**: ANNS workload data (corpus content, query trace map, 4997 pipeline traces)
