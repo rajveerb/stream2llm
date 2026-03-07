@@ -125,7 +125,7 @@ def _get_display_name(sched: str) -> str:
     return display_names.get(sched, sched.replace('_', ' ').title())
 
 
-def _combined_plot_1x4(data, out_dir: Path, hardware: str = "H200"):
+def _combined_plot_1x4(data, out_dir: Path, hardware: str = "H200", output_prefix: str = "ttft_ccdf_crawler"):
     """Create a 1x4 subplot figure with QPS 0.5, 1.0, 2.0, 4.0."""
 
     # Target QPS values
@@ -220,7 +220,7 @@ def _combined_plot_1x4(data, out_dir: Path, hardware: str = "H200"):
     fig.tight_layout(rect=[0, 0.08, 1, 0.96])
     out_dir.mkdir(parents=True, exist_ok=True)
 
-    filename = "ttft_ccdf_combined_1x4.png"
+    filename = f"{output_prefix}_1x4.png"
     fig.savefig(out_dir / filename, dpi=300, bbox_inches='tight')
     plt.close(fig)
     print(f"[saved] {out_dir / filename}")
@@ -234,6 +234,10 @@ def main(argv: Sequence[str] | None = None):
     parser.add_argument("--output-dir",
                         default=Path("ttft_ccdf_combined"),
                         type=Path)
+    parser.add_argument("--output-prefix",
+                        default="ttft_ccdf_crawler",
+                        type=str,
+                        help="Prefix for output filename")
     parser.add_argument("--hardware",
                         default="H200",
                         type=str,
@@ -249,7 +253,7 @@ def main(argv: Sequence[str] | None = None):
         raise SystemExit("no data discovered")
 
     # Generate 1x4 subplot figure
-    _combined_plot_1x4(data, args.output_dir, hardware=args.hardware)
+    _combined_plot_1x4(data, args.output_dir, hardware=args.hardware, output_prefix=args.output_prefix)
 
 
 if __name__ == "__main__":
