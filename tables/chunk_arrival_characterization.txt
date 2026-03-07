@@ -1,0 +1,22 @@
+================================================================================
+Chunk Arrival Time Characterization
+================================================================================
+
+--- Inter-Chunk Arrival Time Statistics ---
+          Count  Mean (ms)  Median (ms)  Std (ms)  P5 (ms)  P25 (ms)  P75 (ms)  P95 (ms)  P99 (ms)  Min (ms)  Max (ms)
+Workload                                                                                                              
+ANNS      17067     157.14        36.68    382.89     1.39     11.25    124.33    698.80   2079.26      0.21   8916.65
+Crawler   29656    1053.00       700.67   1170.26    81.85    387.12   1339.52   3077.99   5293.35      3.01  34946.56
+
+--- Chunks Per Query Statistics ---
+          Queries  Mean Chunks/Query  Median Chunks/Query  Min Chunks/Query  Max Chunks/Query
+Workload                                                                                     
+ANNS         4997               4.42                 4.00                 1                26
+Crawler      4322               7.86                 8.00                 1                17
+
+--- Query Duration Statistics ---
+          Mean Duration (ms)  Median Duration (ms)  P95 Duration (ms)  Max Duration (ms)
+Workload                                                                                
+ANNS                 3630.26               3463.77            5375.12           10632.90
+Crawler              9869.61               9287.34           16692.67           49446.60
+

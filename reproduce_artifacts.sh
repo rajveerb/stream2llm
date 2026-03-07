@@ -68,6 +68,12 @@ python data/crawl/compute_workload_stats.py --input-dir data/crawl/traces/simple
 echo "✓ Complete"
 echo ""
 
+# Chunk arrival characterization
+echo "Running: Chunk arrival characterization"
+python scripts/utils/analysis/chunk_arrival_characterization.py --anns-dir data/anns/res --crawler-dir data/crawl/traces/simpleQA_ALL --output-dir figures --table-dir tables
+echo "✓ Complete"
+echo ""
+
 # Detailed Reproduction Commands
 
 # tab:eviction-ablation-combined (Crawler)
