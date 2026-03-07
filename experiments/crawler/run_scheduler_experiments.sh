@@ -19,7 +19,7 @@ fi
 # Configuration
 #BASE_CONFIG_DIR set above
 SCHEDULERS=("default_vllm" "fcfs" "mcps" "lcas")
-ARRIVAL_TIMES=("0_0625" "0_125" "0_25" "0_5" "1" "2" "4" "8" "16" "32")
+ARRIVAL_TIMES=("0_25" "0_5" "1" "2")
 
 # Colors for output
 RED='\033[0;31m'
@@ -197,10 +197,8 @@ AVAILABLE SCHEDULERS:
     mcps         - Most Chunks Processed with Least Chunks eviction
 
 ARRIVAL TIMES (seconds -> QPS):
-    0_0625 or 0.0625 -> 16 QPS    0_125 or 0.125 -> 8 QPS     0_25 or 0.25 -> 4 QPS      
-    0_5 or 0.5 -> 2 QPS           1 -> 1 QPS                  2 -> 0.5 QPS       
-    4 -> 0.25 QPS                 8 -> 0.125 QPS              16 -> 0.0625 QPS    
-    32 -> 0.03125 QPS
+    0_25 or 0.25 -> 4 QPS         0_5 or 0.5 -> 2 QPS
+    1 -> 1 QPS                    2 -> 0.5 QPS
 
 HELP
         ;;
