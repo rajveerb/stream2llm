@@ -49,7 +49,9 @@ huggingface-cli login
 | **tab:workload-characteristics** — ANNS | `cd data/anns && python compute_workload_stats.py --corpus-prefix retrieved_corpus_content --query-map query_trace_map_5k.json --trace-dir res --max-queries 500 --tokenizer-model meta-llama/Llama-3.1-8B-Instruct` |
 | **tab:workload-characteristics** — Crawler | `cd data/crawl && python compute_workload_stats.py --input-dir traces/simpleQA_ALL --tokenizer-model meta-llama/Llama-3.1-8B-Instruct --cores 100` |
 
-## Building Stream2LLM Engine
+## Re-running Experiments
+
+### Building Stream2LLM Engine
 
 The `stream2llm/` directory contains the modified vLLM engine with streaming input support.
 
@@ -68,8 +70,6 @@ cd ..
 ```
 
 **Hardware requirements:** NVIDIA GPU with compute capability >= 7.0 (e.g., A40, H100, H200). Tensor parallelism requires multiple GPUs.
-
-## Re-running Experiments
 
 See [`experiments/README.md`](experiments/README.md) for detailed instructions with exact commands for running all 10 experiment configurations, ablation studies, SLURM submission, and plot generation.
 
