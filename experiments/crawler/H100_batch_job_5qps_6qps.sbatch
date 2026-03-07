@@ -12,7 +12,7 @@
 #SBATCH --mail-user=rr@gatech.edu
 
 
-CONDA_ENV=/storage/home/hcoda1/1/rbachkaniwala3/scratch/conda-envs/streamllm_rajveerb_H200
+CONDA_ENV=/storage/home/hcoda1/1/rbachkaniwala3/scratch/conda-envs/stream2llm_rajveerb_H200
 PROJECT_DIR=/storage/home/hcoda1/1/rbachkaniwala3/scratch/stream-llm_rajveerb_H200
 
 

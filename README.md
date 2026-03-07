@@ -1,6 +1,6 @@
-# StreamLLM Artifact
+# Stream2LLM Artifact
 
-Reproducibility artifact for the StreamLLM paper: *Streaming Prompt Inference for LLM Serving*.
+Reproducibility artifact for the Stream2LLM paper: *Streaming Prompt Inference for LLM Serving*.
 
 This repository contains all scripts, data, and pre-built figures needed to reproduce every figure, table, and inline number in the paper.
 
@@ -49,12 +49,12 @@ huggingface-cli login
 | **tab:workload-characteristics** — ANNS | `cd data/anns && python compute_workload_stats.py --corpus-prefix retrieved_corpus_content --query-map query_trace_map_5k.json --trace-dir res --max-queries 500 --tokenizer-model meta-llama/Llama-3.1-8B-Instruct` |
 | **tab:workload-characteristics** — Crawler | `cd data/crawl && python compute_workload_stats.py --input-dir traces/simpleQA_ALL --tokenizer-model meta-llama/Llama-3.1-8B-Instruct --cores 100` |
 
-## Building StreamLLM Engine
+## Building Stream2LLM Engine
 
 The `stream2llm/` directory contains the modified vLLM engine with streaming input support.
 
 ```bash
-# Install StreamLLM (requires CUDA-capable GPU)
+# Install Stream2LLM (requires CUDA-capable GPU)
 cd stream2llm
 wget https://files.pythonhosted.org/packages/c4/9d/64e107313a19327b049a2267871cceb9b0415f79ee5c00dc360099f929e8/vllm-0.8.1-cp38-abi3-manylinux1_x86_64.whl
 
