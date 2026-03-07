@@ -54,6 +54,7 @@ huggingface-cli login
 | **tab:eviction-ablation-combined** | See [Detailed Reproduction Commands](#detailed-reproduction-commands) |
 | **tab:preemption-stats-combined** | See [Detailed Reproduction Commands](#detailed-reproduction-commands) |
 | **Inline evaluation numbers** | See [Detailed Reproduction Commands](#detailed-reproduction-commands) |
+| **Scheduler sorting latency** | See [Detailed Reproduction Commands](#detailed-reproduction-commands) |
 
 ### Detailed Reproduction Commands
 
@@ -97,6 +98,15 @@ python scripts/utils/analysis/compute_scheduler_improvements.py --log-dir data/r
 python scripts/utils/analysis/compute_scheduler_improvements.py --log-dir data/run_log/anns/H200_enhanced_schedulers_v1_full --output-dir tables --dataset-name H200_anns --max-qps 2
 python scripts/utils/analysis/compute_scheduler_improvements.py --log-dir data/run_log/crawler/H100_enhanced_schedulers_v1_full --output-dir tables --dataset-name H100_crawler --max-qps 4
 python scripts/utils/analysis/compute_scheduler_improvements.py --log-dir data/run_log/anns/H100_enhanced_schedulers_v1_full --output-dir tables --dataset-name H100_anns --max-qps 2
+```
+
+#### Scheduler sorting latency
+
+Benchmarks the computational overhead of each scheduling policy's sorting + budget-allocation logic using realistic request populations derived from run log data. Outputs a table with mean, p50, p95, p99 latencies in microseconds.
+
+```bash
+python scripts/utils/analysis/benchmark_scheduler_latency.py --log-dir data/run_log/anns/H200_enhanced_schedulers_v1_full --output-dir tables --dataset-name anns
+python scripts/utils/analysis/benchmark_scheduler_latency.py --log-dir data/run_log/crawler/H200_enhanced_schedulers_v1_full --output-dir tables --dataset-name crawler
 ```
 
 ## Re-running Experiments

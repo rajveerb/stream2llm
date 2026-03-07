@@ -161,5 +161,16 @@ python scripts/utils/analysis/compute_scheduler_improvements.py --log-dir data/r
 echo "✓ Complete"
 echo ""
 
+# Scheduler sorting + budget allocation latency benchmark
+echo "Running: Scheduler sorting latency benchmark — ANNS"
+python scripts/utils/analysis/benchmark_scheduler_latency.py --log-dir data/run_log/anns/H200_enhanced_schedulers_v1_full --output-dir tables --dataset-name anns
+echo "✓ Complete"
+echo ""
+
+echo "Running: Scheduler sorting latency benchmark — Crawler"
+python scripts/utils/analysis/benchmark_scheduler_latency.py --log-dir data/run_log/crawler/H200_enhanced_schedulers_v1_full --output-dir tables --dataset-name crawler
+echo "✓ Complete"
+echo ""
+
 echo "=============================================="
 echo "All artifact reproduction commands completed!"
