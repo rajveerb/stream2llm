@@ -26,7 +26,7 @@ huggingface-cli login
 
 | Directory | Contents |
 |-----------|----------|
-| `stream2llm/` | Modified vLLM engine with streaming prompt support |
+| `stream2llm/` | Modified vLLM engine with streaming input support |
 | `experiments/` | Experiment driver scripts, configs, and SLURM job files |
 | `data/` | HuggingFace submodule with all large data (run logs, workload traces, perf models) |
 | `scripts/` | Plotting and analysis scripts |
@@ -51,7 +51,7 @@ huggingface-cli login
 
 ## Building StreamLLM Engine
 
-The `stream2llm/` directory contains the modified vLLM engine with streaming prompt support.
+The `stream2llm/` directory contains the modified vLLM engine with streaming input support.
 
 ```bash
 # Install StreamLLM (requires CUDA-capable GPU)

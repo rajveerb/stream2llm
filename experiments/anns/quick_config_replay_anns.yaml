@@ -1,4 +1,4 @@
-# Configuration for ANNS query replay with streaming prompt updates
+# Configuration for ANNS query replay with streaming input updates
 data_dir: data/anns
 trace_dir: data/anns/res
 query_trace_map: data/anns/query_trace_map_5k.json

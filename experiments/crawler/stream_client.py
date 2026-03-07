@@ -80,7 +80,7 @@ def update_stream_request(
     Args:
         request_id: The unique ID of the request
         prompt_token_ids: The complete new set of prompt tokens
-        is_streaming_prompt: Whether this is a streaming prompt request
+        is_streaming_prompt: Whether this is a streaming input request
         is_streaming_prompt_finished: Whether prompt streaming is finished
 
     Returns:
