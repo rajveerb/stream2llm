@@ -101,7 +101,7 @@ def collect_data(metrics_files: List[str], percentile: float = 95, min_rate: flo
     return dict(data)
 
 
-def plot_ttft_qps_comparison(data: Dict, output_dir: str, percentile: float = 95, min_rate: float = 0, max_rate: float = float('inf')):
+def plot_ttft_qps_comparison(data: Dict, output_dir: str, percentile: float = 95, min_rate: float = 0, max_rate: float = float('inf'), output_prefix: str = "ttft_qps_comparison_crawler"):
     """Create two plots: Average TTFT vs QPS and custom percentile TTFT vs QPS for different schedulers."""
     if not data:
         print("No data available for plotting.")
@@ -211,13 +211,13 @@ def plot_ttft_qps_comparison(data: Dict, output_dir: str, percentile: float = 95
     # Generate filename
     if min_rate > 0 or max_rate != float('inf'):
         if max_rate == float('inf'):
-            filename = f'ttft_qps_comparison_{min_rate}plus_qps.png'
+            filename = f'{output_prefix}_{min_rate}plus_qps.png'
         elif min_rate == 0:
-            filename = f'ttft_qps_comparison_0_{max_rate}_qps.png'
+            filename = f'{output_prefix}_0_{max_rate}_qps.png'
         else:
-            filename = f'ttft_qps_comparison_{min_rate}_{max_rate}_qps.png'
+            filename = f'{output_prefix}_{min_rate}_{max_rate}_qps.png'
     else:
-        filename = 'ttft_qps_comparison.png'
+        filename = f'{output_prefix}.png'
     
     output_path = os.path.join(output_dir, filename)
     plt.savefig(output_path, bbox_inches='tight', dpi=300)
@@ -256,23 +256,27 @@ def main():
                        nargs='+',
                        default=[],
                        help="List of scheduler names to exclude from the plot")
+    parser.add_argument("--output-prefix",
+                       type=str,
+                       default="ttft_qps_comparison_crawler",
+                       help="Prefix for output filename")
 
     args = parser.parse_args()
     os.makedirs(args.output_dir, exist_ok=True)
-    
+
     # Find all metrics files
     metrics_files = glob.glob(os.path.join(args.log_dir, "**/run_metrics.csv"), recursive=True)
     if not metrics_files:
         print("No metrics files found. Exiting.")
         return
-    
+
     print(f"Found {len(metrics_files)} metrics files")
     if args.exclude_schedulers:
         print(f"Excluding schedulers: {args.exclude_schedulers}")
 
     # Collect and plot data
     data = collect_data(metrics_files, args.percentile, args.min_rate, args.max_rate, args.exclude_schedulers)
-    plot_ttft_qps_comparison(data, args.output_dir, args.percentile, args.min_rate, args.max_rate)
+    plot_ttft_qps_comparison(data, args.output_dir, args.percentile, args.min_rate, args.max_rate, output_prefix=args.output_prefix)
     
     print(f"Analysis complete. Results saved to {args.output_dir}")
 

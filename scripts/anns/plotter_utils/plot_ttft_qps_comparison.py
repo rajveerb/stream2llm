@@ -119,7 +119,8 @@ def plot_ttft_qps_comparison_consolidated(data_by_delay_sched: Dict,
                                           output_dir: str,
                                           percentile: float = 95,
                                           min_rate: float = 0,
-                                          max_rate: float = float('inf')):
+                                          max_rate: float = float('inf'),
+                                          output_prefix: str = "ttft_qps_comparison_anns"):
     """Create subplots for each delay multiplier showing TTFT vs QPS with separate lines per scheduler."""
 
     if not data_by_delay_sched:
@@ -262,7 +263,7 @@ def plot_ttft_qps_comparison_consolidated(data_by_delay_sched: Dict,
 
     # Save plot
     os.makedirs(output_dir, exist_ok=True)
-    filename = 'ttft_qps_comparison_consolidated.png'
+    filename = f'{output_prefix}.png'
     output_path = os.path.join(output_dir, filename)
     plt.savefig(output_path, bbox_inches='tight', dpi=300)
     plt.close()
@@ -297,6 +298,10 @@ def main():
         type=float,
         default=95,
         help="Percentile to use for the second plot (default: 95)")
+    parser.add_argument("--output-prefix",
+                        type=str,
+                        default="ttft_qps_comparison_anns",
+                        help="Prefix for output filename")
 
     args = parser.parse_args()
     os.makedirs(args.output_dir, exist_ok=True)
@@ -323,7 +328,8 @@ def main():
     )
     plot_ttft_qps_comparison_consolidated(data_by_delay, run_dirs_by_delay,
                                           args.output_dir, args.percentile,
-                                          args.min_rate, args.max_rate)
+                                          args.min_rate, args.max_rate,
+                                          output_prefix=args.output_prefix)
 
     print(f"Analysis complete. Results saved to {args.output_dir}")
 
