@@ -11,8 +11,12 @@ This repository contains all scripts, data, and pre-built figures needed to repr
 git clone --recurse-submodules https://github.com/rajveerb/stream2llm.git
 cd stream2llm
 
-# Install Python dependencies
-pip install matplotlib numpy pandas pyyaml transformers
+# Create and activate conda environment
+conda create -n stream2llm python=3.10.9 -y
+conda activate stream2llm
+
+# Install pinned Python dependencies
+pip install -r requirements.txt
 
 # (Optional) HuggingFace login for tokenizer access (needed for workload stats only)
 huggingface-cli login
