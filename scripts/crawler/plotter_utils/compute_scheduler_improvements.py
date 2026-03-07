@@ -84,7 +84,7 @@ def _dataset(csv_files: Sequence[Path]):
             data[sched][qps_val]["streaming"].extend(s.tolist())
             data[sched][qps_val]["non_streaming"].extend(ns.tolist())
         except Exception as err:
-            print("[warn]", err)
+            pass
     return data
 
 
@@ -278,10 +278,6 @@ def main(argv: Sequence[str] | None = None):
                     f"{ratios['p99.9']:>10.3f}x\n"
                 )
 
-    print(f"[saved] {output_file}")
-    print(f"\nContent preview:\n")
-    with open(output_file, 'r') as f:
-        print(f.read())
 
 
 if __name__ == "__main__":

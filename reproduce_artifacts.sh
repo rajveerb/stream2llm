@@ -58,17 +58,13 @@ echo ""
 
 # tab:workload-characteristics — ANNS
 echo "Running: tab:workload-characteristics — ANNS"
-cd data/anns
-python compute_workload_stats.py --corpus-prefix retrieved_corpus_content --query-map query_trace_map_5k.json --trace-dir res --max-queries 500 --tokenizer-model meta-llama/Llama-3.1-8B-Instruct
-cd ../..
+python data/anns/compute_workload_stats.py --corpus-prefix data/anns/retrieved_corpus_content --query-map data/anns/query_trace_map_5k.json --trace-dir data/anns/res --max-queries 500 --tokenizer-model meta-llama/Llama-3.1-8B-Instruct --output-dir tables
 echo "✓ Complete"
 echo ""
 
 # tab:workload-characteristics — Crawler
 echo "Running: tab:workload-characteristics — Crawler"
-cd data/crawl
-python compute_workload_stats.py --input-dir traces/simpleQA_ALL --tokenizer-model meta-llama/Llama-3.1-8B-Instruct --cores 100
-cd ../..
+python data/crawl/compute_workload_stats.py --input-dir data/crawl/traces/simpleQA_ALL --tokenizer-model meta-llama/Llama-3.1-8B-Instruct --cores 100 --output-dir tables
 echo "✓ Complete"
 echo ""
 
@@ -108,33 +104,33 @@ echo ""
 
 # tab:preemption-stats-combined (Crawler)
 echo "Running: tab:preemption-stats-combined — Crawler (cost-based)"
-python scripts/crawler/analysis_scripts/analyze_preemptions.py --log-dir data/run_log/crawler/H200_enhanced_schedulers_v1_full_delay_10
+python scripts/crawler/analysis_scripts/analyze_preemptions.py --log-dir data/run_log/crawler/H200_enhanced_schedulers_v1_full_delay_10 --output-dir tables
 echo "✓ Complete"
 echo ""
 
 echo "Running: tab:preemption-stats-combined — Crawler (recomp-only)"
-python scripts/crawler/analysis_scripts/analyze_preemptions.py --log-dir data/run_log/crawler/H200_enhanced_schedulers_v1_full_delay_10_recomp_only
+python scripts/crawler/analysis_scripts/analyze_preemptions.py --log-dir data/run_log/crawler/H200_enhanced_schedulers_v1_full_delay_10_recomp_only --output-dir tables
 echo "✓ Complete"
 echo ""
 
 echo "Running: tab:preemption-stats-combined — Crawler (swap-only)"
-python scripts/crawler/analysis_scripts/analyze_preemptions.py --log-dir data/run_log/crawler/H200_enhanced_schedulers_v1_full_delay_10_swap_only
+python scripts/crawler/analysis_scripts/analyze_preemptions.py --log-dir data/run_log/crawler/H200_enhanced_schedulers_v1_full_delay_10_swap_only --output-dir tables
 echo "✓ Complete"
 echo ""
 
 # tab:preemption-stats-combined (ANNS)
 echo "Running: tab:preemption-stats-combined — ANNS (cost-based)"
-python scripts/crawler/analysis_scripts/analyze_preemptions.py --log-dir data/run_log/anns/H200_enhanced_schedulers_v1_500q_delay_30
+python scripts/crawler/analysis_scripts/analyze_preemptions.py --log-dir data/run_log/anns/H200_enhanced_schedulers_v1_500q_delay_30 --output-dir tables
 echo "✓ Complete"
 echo ""
 
 echo "Running: tab:preemption-stats-combined — ANNS (recomp-only)"
-python scripts/crawler/analysis_scripts/analyze_preemptions.py --log-dir data/run_log/anns/H200_enhanced_schedulers_v1_500q_delay_30_recomp_only
+python scripts/crawler/analysis_scripts/analyze_preemptions.py --log-dir data/run_log/anns/H200_enhanced_schedulers_v1_500q_delay_30_recomp_only --output-dir tables
 echo "✓ Complete"
 echo ""
 
 echo "Running: tab:preemption-stats-combined — ANNS (swap-only)"
-python scripts/crawler/analysis_scripts/analyze_preemptions.py --log-dir data/run_log/anns/H200_enhanced_schedulers_v1_500q_delay_30_swap_only
+python scripts/crawler/analysis_scripts/analyze_preemptions.py --log-dir data/run_log/anns/H200_enhanced_schedulers_v1_500q_delay_30_swap_only --output-dir tables
 echo "✓ Complete"
 echo ""
 
