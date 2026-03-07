@@ -56,6 +56,13 @@ The `stream2llm/` directory contains the modified vLLM engine with streaming inp
 ```bash
 # Install StreamLLM (requires CUDA-capable GPU)
 cd stream2llm
+wget https://files.pythonhosted.org/packages/c4/9d/64e107313a19327b049a2267871cceb9b0415f79ee5c00dc360099f929e8/vllm-0.8.1-cp38-abi3-manylinux1_x86_64.whl
+
+# Environment variables (update with each vLLM release)
+export VLLM_VERSION=0.8.1
+export VLLM_PRECOMPILED_WHEEL_LOCATION=${PWD}/vllm-0.8.1-cp38-abi3-manylinux1_x86_64.whl
+
+# Install in development mode
 pip install -e .
 cd ..
 ```
