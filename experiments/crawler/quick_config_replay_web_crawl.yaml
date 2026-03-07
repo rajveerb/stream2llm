@@ -1,0 +1,28 @@
+trace_dir: experiments/crawler/out/replay-trace/20250329_194649
+config_for_run: data/run_log/crawler
+use_saved_poisson_delays: null
+prefix_caching_flag: false
+log_stats: true
+model:
+  name: meta-llama/Meta-Llama-3.1-8B-Instruct
+  max_token_budget: 131072
+  gpu_memory_utilization: 0.85
+  tensor_parallel_size: 2
+replay:
+  poisson_avg_arrival_time: 1 # in secs
+  max_output_tokens: 1
+  template: |
+    Answer the question based only on the provided context. If the answer is not in the context, say "I don't know."
+    Context:
+  end_template: |
+
+    Question: 
+experiments:
+  - concurrency: true
+    stream: true
+  - concurrency: true
+    stream: false
+  # - concurrency: false
+  #   stream: true
+  # - concurrency: false
+  #   stream: false

@@ -1,0 +1,49 @@
+# Configuration for ANNS query replay with streaming prompt updates
+data_dir: data/anns
+trace_dir: data/anns/res
+query_trace_map: data/anns/query_trace_map_5k.json
+config_for_run: data/run_log/anns
+use_saved_poisson_delays: null
+prefix_caching_flag: false
+log_stats: true
+
+# Optional: specify which query IDs to replay (if omitted, all queries will be replayed)
+# query_ids: [0, 1, 2, 3, 4, 5]
+
+model:
+  name: meta-llama/Meta-Llama-3.1-8B-Instruct
+  max_token_budget: 131072
+  gpu_memory_utilization: 0.8
+  tensor_parallel_size: 2
+  seed: 42
+
+replay:
+  poisson_avg_arrival_time: 1  # in seconds
+  max_output_tokens: 1
+  delay_multiplier: 10.0  # Multiplier for pipeline pool update delays (1.0 = use trace timings as-is)
+  # Template format for building prompts with retrieved documents
+  template: |
+    Answer the question based only on the provided context. If the answer is not in the context, say "I don't know."
+    Context:
+  end_template: |
+
+    Question:
+
+experiments:
+  - concurrency: true
+    stream: true
+  - concurrency: true
+    stream: false
+  # - concurrency: false
+  #   stream: true
+  # - concurrency: false
+  #   stream: false
+
+# Optional scheduler configuration
+# scheduler: default_vllm
+# use_swap_latency_predictor: 0
+# save_swap_latency_data_path: ""
+# use_saved_swap_latency_data_path: ""
+# use_recomputation_latency_predictor: 0
+# save_recomputation_data_path: ""
+# use_saved_recomputation_data_path: ""
