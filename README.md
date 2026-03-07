@@ -31,6 +31,7 @@ huggingface-cli login
 | `data/` | HuggingFace submodule with all large data (run logs, workload traces, perf models) |
 | `scripts/` | Plotting and analysis scripts |
 | `figures/` | Generated plots and figures from the paper |
+| `figures/reference/` | Pre-built reference figures from the paper (for comparison) |
 | `tables/` | Generated table data and analysis results |
 
 ## Reproducing Paper Artifacts
