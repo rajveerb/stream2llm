@@ -30,7 +30,8 @@ huggingface-cli login
 | `experiments/` | Experiment driver scripts, configs, and SLURM job files |
 | `data/` | HuggingFace submodule with all large data (run logs, workload traces, perf models) |
 | `scripts/` | Plotting and analysis scripts |
-| `figures/` | Pre-built reference figures from the paper |
+| `figures/` | Generated plots and figures from the paper |
+| `tables/` | Generated table data and analysis results |
 
 ## Reproducing Paper Artifacts
 
@@ -60,16 +61,16 @@ Ablation study table (scheduler + eviction strategy speedups). Run `compute_sche
 
 **Crawler:**
 ```bash
-python scripts/crawler/plotter_utils/compute_scheduler_improvements.py --log-dir data/run_log/crawler/H200_enhanced_schedulers_v1_full_delay_10 --output-dir figures --dataset-name H200_crawler_cost_based --max-qps 4
-python scripts/crawler/plotter_utils/compute_scheduler_improvements.py --log-dir data/run_log/crawler/H200_enhanced_schedulers_v1_full_delay_10_recomp_only --output-dir figures --dataset-name H200_crawler_recomp_only --max-qps 4
-python scripts/crawler/plotter_utils/compute_scheduler_improvements.py --log-dir data/run_log/crawler/H200_enhanced_schedulers_v1_full_delay_10_swap_only --output-dir figures --dataset-name H200_crawler_swap_only --max-qps 4
+python scripts/crawler/plotter_utils/compute_scheduler_improvements.py --log-dir data/run_log/crawler/H200_enhanced_schedulers_v1_full_delay_10 --output-dir tables --dataset-name H200_crawler_cost_based --max-qps 4
+python scripts/crawler/plotter_utils/compute_scheduler_improvements.py --log-dir data/run_log/crawler/H200_enhanced_schedulers_v1_full_delay_10_recomp_only --output-dir tables --dataset-name H200_crawler_recomp_only --max-qps 4
+python scripts/crawler/plotter_utils/compute_scheduler_improvements.py --log-dir data/run_log/crawler/H200_enhanced_schedulers_v1_full_delay_10_swap_only --output-dir tables --dataset-name H200_crawler_swap_only --max-qps 4
 ```
 
 **ANNS:**
 ```bash
-python scripts/crawler/plotter_utils/compute_scheduler_improvements.py --log-dir data/run_log/anns/H200_enhanced_schedulers_v1_500q_delay_30 --output-dir figures --dataset-name H200_anns_cost_based --max-qps 2
-python scripts/crawler/plotter_utils/compute_scheduler_improvements.py --log-dir data/run_log/anns/H200_enhanced_schedulers_v1_500q_delay_30_recomp_only --output-dir figures --dataset-name H200_anns_recomp_only --max-qps 2
-python scripts/crawler/plotter_utils/compute_scheduler_improvements.py --log-dir data/run_log/anns/H200_enhanced_schedulers_v1_500q_delay_30_swap_only --output-dir figures --dataset-name H200_anns_swap_only --max-qps 2
+python scripts/crawler/plotter_utils/compute_scheduler_improvements.py --log-dir data/run_log/anns/H200_enhanced_schedulers_v1_500q_delay_30 --output-dir tables --dataset-name H200_anns_cost_based --max-qps 2
+python scripts/crawler/plotter_utils/compute_scheduler_improvements.py --log-dir data/run_log/anns/H200_enhanced_schedulers_v1_500q_delay_30_recomp_only --output-dir tables --dataset-name H200_anns_recomp_only --max-qps 2
+python scripts/crawler/plotter_utils/compute_scheduler_improvements.py --log-dir data/run_log/anns/H200_enhanced_schedulers_v1_500q_delay_30_swap_only --output-dir tables --dataset-name H200_anns_swap_only --max-qps 2
 ```
 
 #### tab:preemption-stats-combined
@@ -90,10 +91,10 @@ python scripts/crawler/analysis_scripts/analyze_preemptions.py --log-dir data/ru
 All speedup ratios cited in the paper body (Sections 3.1–3.6). Run `compute_scheduler_improvements.py` against the standard (no pressure) H200 and H100 run logs.
 
 ```bash
-python scripts/crawler/plotter_utils/compute_scheduler_improvements.py --log-dir data/run_log/crawler/H200_enhanced_schedulers_v1_full --output-dir figures --dataset-name H200_crawler --max-qps 4
-python scripts/crawler/plotter_utils/compute_scheduler_improvements.py --log-dir data/run_log/anns/H200_enhanced_schedulers_v1_full --output-dir figures --dataset-name H200_anns --max-qps 2
-python scripts/crawler/plotter_utils/compute_scheduler_improvements.py --log-dir data/run_log/crawler/H100_enhanced_schedulers_v1_full --output-dir figures --dataset-name H100_crawler --max-qps 4
-python scripts/crawler/plotter_utils/compute_scheduler_improvements.py --log-dir data/run_log/anns/H100_enhanced_schedulers_v1_full --output-dir figures --dataset-name H100_anns --max-qps 2
+python scripts/crawler/plotter_utils/compute_scheduler_improvements.py --log-dir data/run_log/crawler/H200_enhanced_schedulers_v1_full --output-dir tables --dataset-name H200_crawler --max-qps 4
+python scripts/crawler/plotter_utils/compute_scheduler_improvements.py --log-dir data/run_log/anns/H200_enhanced_schedulers_v1_full --output-dir tables --dataset-name H200_anns --max-qps 2
+python scripts/crawler/plotter_utils/compute_scheduler_improvements.py --log-dir data/run_log/crawler/H100_enhanced_schedulers_v1_full --output-dir tables --dataset-name H100_crawler --max-qps 4
+python scripts/crawler/plotter_utils/compute_scheduler_improvements.py --log-dir data/run_log/anns/H100_enhanced_schedulers_v1_full --output-dir tables --dataset-name H100_anns --max-qps 2
 ```
 
 ## Re-running Experiments
