@@ -150,7 +150,7 @@ def _get_display_name(sched: str) -> str:
     return display_names.get(sched, sched.replace('_', ' ').title())
 
 
-def plot_trace_completion_time(data, output_dir: Path, title_suffix: str = ""):
+def plot_trace_completion_time(data, output_dir: Path, title_suffix: str = "", output_prefix: str = "trace_completion_time_anns"):
     """Create trace completion time vs QPS plot."""
 
     fig, ax = plt.subplots(figsize=(10, 10))
@@ -242,7 +242,7 @@ def plot_trace_completion_time(data, output_dir: Path, title_suffix: str = ""):
     fig.tight_layout()
     output_dir.mkdir(parents=True, exist_ok=True)
 
-    filename = "trace_completion_time.png"
+    filename = f"{output_prefix}.png"
     fig.savefig(output_dir / filename, dpi=300, bbox_inches='tight')
     plt.close(fig)
 
@@ -258,6 +258,10 @@ def main(argv: Sequence[str] | None = None):
                         default=Path("."),
                         type=Path,
                         help="Output directory for plots")
+    parser.add_argument("--output-prefix",
+                        default="trace_completion_time_anns",
+                        type=str,
+                        help="Prefix for output filename")
     parser.add_argument("--title-suffix",
                         type=str,
                         default="",
@@ -284,7 +288,7 @@ def main(argv: Sequence[str] | None = None):
     print(f"[info] Found {len(data)} schedulers with data")
 
     # Generate trace completion time plot
-    plot_trace_completion_time(data, args.output_dir, args.title_suffix)
+    plot_trace_completion_time(data, args.output_dir, args.title_suffix, output_prefix=args.output_prefix)
 
 
 if __name__ == "__main__":
