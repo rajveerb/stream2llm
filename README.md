@@ -71,68 +71,7 @@ cd ..
 
 ## Re-running Experiments
 
-The `experiments/` directory contains driver scripts and configs to reproduce experiment run logs from scratch on GPU hardware. Pre-computed run logs are available in `data/run_log/` for convenience. Experiment configs write output directly to `data/run_log/`, so the same plot commands work whether using pre-computed data or freshly generated results — no path translation needed.
-
-### Experiment Configurations
-
-The table below maps each experiment configuration to its pre-computed data directory:
-
-| Workload | Config Directory | Pre-computed Data | Hardware | Description |
-|----------|-----------------|-------------------|----------|-------------|
-| Crawler | `experiments/crawler/configs/H200_enhanced_schedulers_v1_full` | `data/run_log/crawler/H200_enhanced_schedulers_v1_full` | H200 | Main experiment |
-| Crawler | `experiments/crawler/configs/H200_enhanced_schedulers_v1_full_delay_10` | `data/run_log/crawler/H200_enhanced_schedulers_v1_full_delay_10` | H200 | 10x page-scrape delay |
-| Crawler | `experiments/crawler/configs/H200_enhanced_schedulers_v1_full_delay_10_recomp_only` | `data/run_log/crawler/H200_enhanced_schedulers_v1_full_delay_10_recomp_only` | H200 | Recompute-only ablation |
-| Crawler | `experiments/crawler/configs/H200_enhanced_schedulers_v1_full_delay_10_swap_only` | `data/run_log/crawler/H200_enhanced_schedulers_v1_full_delay_10_swap_only` | H200 | Swap-only ablation |
-| Crawler | `experiments/crawler/configs/H100_enhanced_schedulers_v1_full` | `data/run_log/crawler/H100_enhanced_schedulers_v1_full` | H100 | Hardware comparison |
-| ANNS | `experiments/anns/configs/H200_enhanced_schedulers_v1_full` | `data/run_log/anns/H200_enhanced_schedulers_v1_full` | H200 | Main experiment |
-| ANNS | `experiments/anns/configs/H200_enhanced_schedulers_v1_500q_delay_30` | `data/run_log/anns/H200_enhanced_schedulers_v1_500q_delay_30` | H200 | 30x pipeline delay |
-| ANNS | `experiments/anns/configs/H200_enhanced_schedulers_v1_500q_delay_30_recomp_only` | `data/run_log/anns/H200_enhanced_schedulers_v1_500q_delay_30_recomp_only` | H200 | Recompute-only ablation |
-| ANNS | `experiments/anns/configs/H200_enhanced_schedulers_v1_500q_delay_30_swap_only` | `data/run_log/anns/H200_enhanced_schedulers_v1_500q_delay_30_swap_only` | H200 | Swap-only ablation |
-| ANNS | `experiments/anns/configs/H100_enhanced_schedulers_v1_full` | `data/run_log/anns/H100_enhanced_schedulers_v1_full` | H100 | Hardware comparison |
-
-#### Config Variant Naming
-
-- **`*_full`** — All schedulers with both recomputation and swap enabled
-- **`*_delay_10`** / **`*_delay_30`** — Artificial delay multiplier simulating slower streaming sources (10x for crawler page-scrape, 30x for ANNS pipeline)
-- **`*_recomp_only`** — Swap disabled, only recomputation
-- **`*_swap_only`** — Recomputation disabled, only swap
-
-### Crawler Experiments
-
-```bash
-# Run a single scheduler experiment
-bash experiments/crawler/run_scheduler_experiments.sh \
-  experiments/crawler/configs/H200_enhanced_schedulers_v1_full single default_vllm 1
-
-# Run all scheduler comparisons at a specific QPS
-bash experiments/crawler/run_scheduler_experiments.sh \
-  experiments/crawler/configs/H200_enhanced_schedulers_v1_full compare 1
-
-# Generate all analysis plots from run logs
-bash experiments/crawler/generate_all_plots.sh \
-  data/run_log/crawler/H200_enhanced_schedulers_v1_full
-```
-
-### ANNS Experiments
-
-```bash
-# Run a single scheduler experiment
-bash experiments/anns/run_scheduler_experiments.sh \
-  experiments/anns/configs/H200_enhanced_schedulers_v1_full single default_vllm 1
-
-# Generate all analysis plots from run logs
-bash experiments/anns/generate_all_plots.sh \
-  data/run_log/anns/H200_enhanced_schedulers_v1_full
-```
-
-### SLURM Cluster Submission
-
-Each experiment directory includes `*.sbatch` files for SLURM-based HPC clusters:
-
-```bash
-sbatch experiments/crawler/H200_batch_job_full.sbatch
-sbatch experiments/anns/H200_batch_job_full.sbatch
-```
+See [`experiments/README.md`](experiments/README.md) for detailed instructions with exact commands for running all 10 experiment configurations, ablation studies, SLURM submission, and plot generation.
 
 ## Data Organization
 
