@@ -243,7 +243,7 @@ def plot_tokens_invalidated_ccdf_1x4(data, output_dir: Path, title_suffix: str =
     print(f"\n[saved] {output_dir / filename}")
 
 
-def plot_tokens_invalidated_efficiency_table(data, output_dir: Path, title_suffix: str = ""):
+def plot_tokens_invalidated_efficiency_table(data, output_dir: Path, title_suffix: str = "", table_output_dir: Path | None = None):
     """Generate a table showing token invalidation efficiency ratios."""
 
     # Get all QPS values
@@ -292,7 +292,9 @@ def plot_tokens_invalidated_efficiency_table(data, output_dir: Path, title_suffi
                     })
 
     # Save results to text file
-    output_file = output_dir / "tokens_invalidated_efficiency_ratios.txt"
+    save_dir = table_output_dir if table_output_dir is not None else output_dir
+    save_dir.mkdir(parents=True, exist_ok=True)
+    output_file = save_dir / "tokens_invalidated_efficiency_ratios.txt"
     with open(output_file, 'w') as f:
         f.write(f"Token Invalidation Efficiency Ratios vs Baseline (Default vLLM){title_suffix}\n")
         f.write("=" * 80 + "\n")
@@ -321,6 +323,10 @@ def main(argv: Sequence[str] | None = None):
                         default=Path("."),
                         type=Path,
                         help="Output directory for plots")
+    parser.add_argument("--table-output-dir",
+                        type=Path,
+                        default=None,
+                        help="Output directory for table data (defaults to output-dir)")
     parser.add_argument("--title-suffix",
                         type=str,
                         default="",
@@ -346,7 +352,7 @@ def main(argv: Sequence[str] | None = None):
     plot_tokens_invalidated_ccdf_1x4(data, args.output_dir, args.title_suffix)
 
     # Generate efficiency ratio table
-    plot_tokens_invalidated_efficiency_table(data, args.output_dir, args.title_suffix)
+    plot_tokens_invalidated_efficiency_table(data, args.output_dir, args.title_suffix, table_output_dir=args.table_output_dir)
 
 
 if __name__ == "__main__":
