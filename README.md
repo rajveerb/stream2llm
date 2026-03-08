@@ -1,5 +1,7 @@
 # Stream2LLM Artifact
 
+[![DOI](https://zenodo.org/badge/1174311962.svg)](https://doi.org/10.5281/zenodo.18906769)
+
 Artifact for the MLSys 2026 artifact evaluation process for the paper: *Stream2LLM: Overlap Context Streaming and Prefill for Reduced Time-to-First-Token*.
 
 This repository contains all scripts, data, and pre-built figures needed to reproduce every figure, table, and inline number in the paper.
