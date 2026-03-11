@@ -16,7 +16,7 @@ echo ""
 
 # fig:ttft — Combined Crawler + ANNS stacked plot
 echo "Running: fig:ttft — Combined Crawler + ANNS (stacked 2x4)"
-python scripts/crawler/plotter_utils/plot_ttft_ccdf_stacked_2x4.py --crawler-log-dir data/run_log/crawler/H200_enhanced_schedulers_v1_full --anns-log-dir data/run_log/anns/H200_enhanced_schedulers_v1_full --output-dir figures
+python scripts/utils/plotting/plot_ttft_ccdf_stacked_2x4.py --crawler-log-dir data/run_log/crawler/H200_enhanced_schedulers_v1_full --anns-log-dir data/run_log/anns/H200_enhanced_schedulers_v1_full --output-dir figures
 echo "✓ Complete"
 echo ""
 
