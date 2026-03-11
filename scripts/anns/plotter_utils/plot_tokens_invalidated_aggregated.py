@@ -162,7 +162,7 @@ def plot_tokens_invalidated_ccdf_1x4(data, output_dir: Path, title_suffix: str =
     x_ticks = np.arange(0, x_max + 1, 10000)
 
     # Create 1x4 subplot layout
-    fig, axes = plt.subplots(1, 4, figsize=(20, 5))
+    fig, axes = plt.subplots(1, 4, figsize=(28, 6))
 
     for idx, qps_val in enumerate(qps_to_plot):
         ax = axes[idx]
@@ -192,7 +192,7 @@ def plot_tokens_invalidated_ccdf_1x4(data, output_dir: Path, title_suffix: str =
 
             ax.plot(tokens_sorted, ccdf_pct,
                    label=display_name,
-                   linewidth=2.5,
+                   linewidth=5,
                    color=color,
                    alpha=0.85)
 
@@ -207,15 +207,15 @@ def plot_tokens_invalidated_ccdf_1x4(data, output_dir: Path, title_suffix: str =
                 'p99': tokens_sorted[min(p99_idx, len(tokens_sorted)-1)] if p99_idx < len(tokens_sorted) else tokens_sorted[-1],
             }
 
-        ax.set_xlabel("Tokens Invalidated", fontsize=16, fontweight='bold')
+        ax.set_xlabel("Tokens Invalidated", fontsize=26, fontweight='bold', labelpad=12)
         if idx == 0:
-            ax.set_ylabel("P(Tokens Invalidated > x)", fontsize=16, fontweight='bold')
+            ax.set_ylabel("P(Tokens Invalidated > x)", fontsize=26, fontweight='bold', labelpad=12)
         else:
             ax.set_ylabel("")
-        ax.set_title(f"QPS {qps_val}", fontsize=18, fontweight='bold')
+        ax.set_title(f"QPS {qps_val}", fontsize=28, fontweight='bold')
         ax.set_yscale('log')
         ax.grid(True, alpha=0.3, which='both')
-        ax.tick_params(axis='both', which='major', labelsize=14)
+        ax.tick_params(axis='both', which='major', labelsize=22, pad=8)
 
         # Set y-axis to show percentages
         ax.yaxis.set_major_formatter(ticker.FuncFormatter(lambda y, _: f'{y:.1f}%'))
@@ -227,8 +227,7 @@ def plot_tokens_invalidated_ccdf_1x4(data, output_dir: Path, title_suffix: str =
         ax.xaxis.set_major_formatter(ticker.FuncFormatter(
             lambda x, _: f'{x/1000:g}K' if x >= 1000 else (f'{x:g}' if x > 0 else '0')))
 
-        if idx == 0:  # Only put legend on first plot
-            ax.legend(fontsize=14, loc='upper right')
+        # No per-subplot legend; shared legend at bottom
 
         # Print efficiency ratios (lower is better for token invalidation)
         if 'default_vllm' in percentile_data:
@@ -244,7 +243,12 @@ def plot_tokens_invalidated_ccdf_1x4(data, output_dir: Path, title_suffix: str =
 
     # Overall title
     fig.suptitle(f"Token Invalidation CCDF — Update Mode, ANNS Workload{title_suffix}",
-                 fontsize=20, fontweight='bold', y=1.02)
+                 fontsize=32, fontweight='bold', y=1.02)
+
+    # Shared legend at bottom
+    handles, labels = axes[0].get_legend_handles_labels()
+    fig.legend(handles, labels, loc='lower center', bbox_to_anchor=(0.5, -0.14),
+               ncol=len(handles), fontsize=24, framealpha=0.95)
 
     fig.tight_layout()
     output_dir.mkdir(parents=True, exist_ok=True)

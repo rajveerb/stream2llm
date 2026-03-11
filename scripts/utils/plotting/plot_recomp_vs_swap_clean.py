@@ -129,11 +129,11 @@ def plot_dual_hardware_comparison(recomp_data_1, swap_data_1, title_1,
     ax1.plot(data_1["swap_tokens"], data_1["total_swap_latencies"],
              marker='D', linestyle='-', linewidth=3, markersize=12,
              label='Total Swap', color='#0077b6')
-    ax1.set_xlabel('Number of Tokens', fontsize=24)
-    ax1.set_ylabel('Latency (ms)', fontsize=24)
-    ax1.set_title(title_1, fontsize=26)
-    ax1.legend(fontsize=18)
-    ax1.tick_params(axis='both', which='major', labelsize=18)
+    ax1.set_xlabel('Number of Tokens', fontsize=26, fontweight='bold', labelpad=12)
+    ax1.set_ylabel('Latency (ms)', fontsize=26, fontweight='bold', labelpad=12)
+    ax1.set_title(title_1, fontsize=28, fontweight='bold')
+    ax1.legend(fontsize=24)
+    ax1.tick_params(axis='both', which='major', labelsize=22, pad=8)
     ax1.grid(True, linestyle='--', alpha=0.7)
     # Reduce x-axis tick density for better spacing
     from matplotlib.ticker import MaxNLocator
@@ -146,11 +146,11 @@ def plot_dual_hardware_comparison(recomp_data_1, swap_data_1, title_1,
     ax2.plot(data_2["swap_tokens"], data_2["total_swap_latencies"],
              marker='D', linestyle='-', linewidth=3, markersize=12,
              label='Total Swap', color='#0077b6')
-    ax2.set_xlabel('Number of Tokens', fontsize=24)
-    ax2.set_ylabel('Latency (ms)', fontsize=24)
-    ax2.set_title(title_2, fontsize=26)
-    ax2.legend(fontsize=18)
-    ax2.tick_params(axis='both', which='major', labelsize=18)
+    ax2.set_xlabel('Number of Tokens', fontsize=26, fontweight='bold', labelpad=12)
+    ax2.set_ylabel('Latency (ms)', fontsize=26, fontweight='bold', labelpad=12)
+    ax2.set_title(title_2, fontsize=28, fontweight='bold')
+    ax2.legend(fontsize=24)
+    ax2.tick_params(axis='both', which='major', labelsize=22, pad=8)
     ax2.grid(True, linestyle='--', alpha=0.7)
     # Reduce x-axis tick density for better spacing
     ax2.xaxis.set_major_locator(MaxNLocator(nbins=5))
@@ -281,13 +281,13 @@ def plot_combined_latencies(recomp_data,
              color='#0077b6')
 
     # Add labels and title with larger font sizes
-    plt.xlabel('Number of Tokens', fontsize=24)
-    plt.ylabel('Latency (ms)', fontsize=24)
-    plt.title(title, fontsize=26)
-    plt.legend(fontsize=18)
+    plt.xlabel('Number of Tokens', fontsize=26, fontweight='bold', labelpad=12)
+    plt.ylabel('Latency (ms)', fontsize=26, fontweight='bold', labelpad=12)
+    plt.title(title, fontsize=28, fontweight='bold')
+    plt.legend(fontsize=24)
 
     # Increase tick label sizes
-    plt.tick_params(axis='both', which='major', labelsize=18)
+    plt.tick_params(axis='both', which='major', labelsize=22, pad=8)
 
     # Set axis scales based on parameters
     ax = plt.gca()

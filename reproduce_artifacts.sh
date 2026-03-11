@@ -20,15 +20,9 @@ python scripts/utils/plotting/plot_ttft_ccdf_stacked_2x4.py --crawler-log-dir da
 echo "✓ Complete"
 echo ""
 
-# fig:completion — Crawler
-echo "Running: fig:completion — Crawler"
-python scripts/crawler/plotter_utils/plot_trace_completion_time.py --log-dir data/run_log/crawler/H200_enhanced_schedulers_v1_full --output-dir figures --output-prefix trace_completion_time_crawler --max-qps 4
-echo "✓ Complete"
-echo ""
-
-# fig:completion — ANNS
-echo "Running: fig:completion — ANNS"
-python scripts/anns/plotter_utils/plot_trace_completion_time.py --log-dir data/run_log/anns/H200_enhanced_schedulers_v1_full --output-dir figures --output-prefix trace_completion_time_anns --max-qps 2
+# fig:completion — Combined Crawler + ANNS
+echo "Running: fig:completion — Combined Crawler + ANNS"
+python scripts/utils/plotting/plot_trace_completion_combined.py --crawler-log-dir data/run_log/crawler/H200_enhanced_schedulers_v1_full --anns-log-dir data/run_log/anns/H200_enhanced_schedulers_v1_full --output-dir figures
 echo "✓ Complete"
 echo ""
 
