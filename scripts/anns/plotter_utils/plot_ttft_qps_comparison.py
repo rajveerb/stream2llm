@@ -144,7 +144,13 @@ def plot_ttft_qps_comparison_consolidated(data_by_delay_sched: Dict,
 
     percentile_key = f'p{int(percentile)}'
 
-    # Define markers for different schedulers (use default colors)
+    # Define colors and markers for different schedulers (match crawler plot)
+    scheduler_colors = {
+        'default_vllm': '#1f77b4',
+        'fcfs': '#ff7f0e',
+        'lcas': '#2ca02c',
+        'mcps': '#d62728',
+    }
     scheduler_markers = {
         'default_vllm': 'o',
         'fcfs': 's',
@@ -167,7 +173,8 @@ def plot_ttft_qps_comparison_consolidated(data_by_delay_sched: Dict,
             if not data:
                 continue
 
-            # Get marker for this scheduler (fallback to default if not defined)
+            # Get color and marker for this scheduler
+            color = scheduler_colors.get(scheduler, '#000000')
             marker = scheduler_markers.get(scheduler, 'x')
 
             # Separate data for streaming and non-streaming
@@ -200,6 +207,7 @@ def plot_ttft_qps_comparison_consolidated(data_by_delay_sched: Dict,
             if streaming_qps and streaming_mean:
                 ax1.plot(streaming_qps,
                          streaming_mean,
+                         color=color,
                          marker=marker,
                          linestyle='-',
                          linewidth=3.5,
@@ -209,6 +217,7 @@ def plot_ttft_qps_comparison_consolidated(data_by_delay_sched: Dict,
             if non_streaming_qps and non_streaming_mean:
                 ax1.plot(non_streaming_qps,
                          non_streaming_mean,
+                         color=color,
                          marker=marker,
                          linestyle='--',
                          linewidth=3.5,
@@ -220,6 +229,7 @@ def plot_ttft_qps_comparison_consolidated(data_by_delay_sched: Dict,
             if streaming_qps and streaming_percentile:
                 ax2.plot(streaming_qps,
                          streaming_percentile,
+                         color=color,
                          marker=marker,
                          linestyle='-',
                          linewidth=3.5,
@@ -229,6 +239,7 @@ def plot_ttft_qps_comparison_consolidated(data_by_delay_sched: Dict,
             if non_streaming_qps and non_streaming_percentile:
                 ax2.plot(non_streaming_qps,
                          non_streaming_percentile,
+                         color=color,
                          marker=marker,
                          linestyle='--',
                          linewidth=3.5,
@@ -237,16 +248,16 @@ def plot_ttft_qps_comparison_consolidated(data_by_delay_sched: Dict,
                          alpha=0.6)
 
         # Customize Plot 1 (Average TTFT)
-        ax1.set_xlabel('QPS (Queries Per Second)', fontsize=14, fontweight='bold')
-        ax1.set_ylabel('Average TTFT (seconds)', fontsize=14, fontweight='bold')
+        ax1.set_xlabel('QPS (Queries Per Second)', fontsize=22, fontweight='bold')
+        ax1.set_ylabel('Average TTFT (seconds)', fontsize=22, fontweight='bold')
         ax1.grid(True, alpha=0.3)
-        ax1.tick_params(axis='both', which='major', labelsize=12)
+        ax1.tick_params(axis='both', which='major', labelsize=20)
 
         # Customize Plot 2 (Custom percentile TTFT)
-        ax2.set_xlabel('QPS (Queries Per Second)', fontsize=14, fontweight='bold')
-        ax2.set_ylabel(f'P{int(percentile)} TTFT (seconds)', fontsize=14, fontweight='bold')
+        ax2.set_xlabel('QPS (Queries Per Second)', fontsize=22, fontweight='bold')
+        ax2.set_ylabel(f'P{int(percentile)} TTFT (seconds)', fontsize=22, fontweight='bold')
         ax2.grid(True, alpha=0.3)
-        ax2.tick_params(axis='both', which='major', labelsize=12)
+        ax2.tick_params(axis='both', which='major', labelsize=20)
 
     # Main title
     rate_info = ""
@@ -258,14 +269,17 @@ def plot_ttft_qps_comparison_consolidated(data_by_delay_sched: Dict,
         else:
             rate_info = f" (QPS: {min_rate}-{max_rate})"
 
-    fig.suptitle(f'ANNS Workload: TTFT vs QPS Comparison (Avg & P{int(percentile)}) Across Schedulers{rate_info}',
-                 fontsize=20,
+    rate_str = ""
+    if max_rate != float('inf'):
+        rate_str = f" (QPS ≤ {max_rate:g})"
+    fig.suptitle(f'ANNS Workload: TTFT Comparison across schedulers{rate_str}',
+                 fontsize=28,
                  fontweight='bold')
 
     # Create a consolidated legend from the first subplot
     handles, labels = ax1.get_legend_handles_labels()
     fig.legend(handles, labels, loc='upper center', bbox_to_anchor=(0.5, -0.02),
-               ncol=min(4, len(handles)), fontsize=14, frameon=True)
+               ncol=3, fontsize=22, frameon=True)
 
     # Adjust layout
     plt.tight_layout(rect=[0, 0.02, 1, 0.97])
