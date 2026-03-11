@@ -14,15 +14,9 @@ python scripts/utils/plotting/plot_recomp_vs_swap_clean.py --recomp_input data/p
 echo "✓ Complete"
 echo ""
 
-# fig:ttft — Crawler row
-echo "Running: fig:ttft — Crawler row"
-python scripts/crawler/plotter_utils/plot_ttft_ccdf_combined_1x4.py --log-dir data/run_log/crawler/H200_enhanced_schedulers_v1_full --output-dir figures --output-prefix ttft_ccdf_crawler --hardware H200
-echo "✓ Complete"
-echo ""
-
-# fig:ttft — ANNS row
-echo "Running: fig:ttft — ANNS row"
-python scripts/crawler/plotter_utils/plot_ttft_ccdf_anns_1x4.py --log-dir data/run_log/anns/H200_enhanced_schedulers_v1_full --output-dir figures --output-prefix ttft_ccdf_anns
+# fig:ttft — Combined Crawler + ANNS stacked plot
+echo "Running: fig:ttft — Combined Crawler + ANNS (stacked 2x4)"
+python scripts/crawler/plotter_utils/plot_ttft_ccdf_stacked_2x4.py --crawler-log-dir data/run_log/crawler/H200_enhanced_schedulers_v1_full --anns-log-dir data/run_log/anns/H200_enhanced_schedulers_v1_full --output-dir figures
 echo "✓ Complete"
 echo ""
 

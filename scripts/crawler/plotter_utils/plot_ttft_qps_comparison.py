@@ -175,16 +175,16 @@ def plot_ttft_qps_comparison(data: Dict, output_dir: str, percentile: float = 95
                     label=f'{sched_name} (Non-Streaming)')
     
     # Customize Plot 1 (Average TTFT)
-    ax1.set_xlabel('QPS (Queries Per Second)', fontsize=22, fontweight='bold')
-    ax1.set_ylabel('Average TTFT (seconds)', fontsize=22, fontweight='bold')
+    ax1.set_xlabel('QPS', fontsize=26, fontweight='bold', labelpad=12)
+    ax1.set_ylabel('Average TTFT\n(seconds)', fontsize=26, fontweight='bold', labelpad=12)
     ax1.grid(True, alpha=0.3)
-    ax1.tick_params(axis='both', which='major', labelsize=20)
+    ax1.tick_params(axis='both', which='major', labelsize=26, pad=8)
 
     # Customize Plot 2 (Custom percentile TTFT)
-    ax2.set_xlabel('QPS (Queries Per Second)', fontsize=22, fontweight='bold')
-    ax2.set_ylabel(f'P{int(percentile)} TTFT (seconds)', fontsize=22, fontweight='bold')
+    ax2.set_xlabel('QPS', fontsize=26, fontweight='bold', labelpad=12)
+    ax2.set_ylabel(f'P{int(percentile)} TTFT\n(seconds)', fontsize=26, fontweight='bold', labelpad=12)
     ax2.grid(True, alpha=0.3)
-    ax2.tick_params(axis='both', which='major', labelsize=20)
+    ax2.tick_params(axis='both', which='major', labelsize=26, pad=8)
     
     # Main title
     rate_info = ""
@@ -200,16 +200,16 @@ def plot_ttft_qps_comparison(data: Dict, output_dir: str, percentile: float = 95
     if max_rate != float('inf'):
         rate_str = f" (QPS ≤ {max_rate:g})"
     fig.suptitle(f'Crawler Workload: TTFT Comparison across schedulers{rate_str}',
-                 fontsize=28, fontweight='bold', y=0.98)
+                 fontsize=32, fontweight='bold', y=0.98)
 
     # Create a consolidated legend from the first subplot
     handles, labels = ax1.get_legend_handles_labels()
     fig.legend(handles, labels, loc='lower center', bbox_to_anchor=(0.5, -0.20),
-               ncol=3, fontsize=22, frameon=True)
+               ncol=3, fontsize=24, frameon=True)
 
     # Adjust layout and save
     plt.tight_layout()
-    plt.subplots_adjust(top=0.90, bottom=0.22)
+    plt.subplots_adjust(top=0.85, bottom=0.22, wspace=0.35)
     
     # Generate filename
     if min_rate > 0 or max_rate != float('inf'):
