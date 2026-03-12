@@ -52,7 +52,7 @@ echo ""
 
 # Table 2 — Crawler workload stats
 echo "Running: Table 2 — Crawler workload stats"
-python data/crawl/compute_workload_stats.py --input-dir data/crawl/traces/simpleQA_ALL --tokenizer-model meta-llama/Llama-3.1-8B-Instruct --cores 10 --output-dir tables
+python data/crawl/compute_workload_stats.py --input-dir data/crawl/traces/simpleQA_ALL --tokenizer-model meta-llama/Llama-3.1-8B-Instruct --cores $(nproc) --output-dir tables
 echo "✓ Complete"
 echo ""
 

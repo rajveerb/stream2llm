@@ -54,7 +54,7 @@ huggingface-cli login
 | **Figure 11** (Trace completion, Crawler + ANNS) | `python scripts/utils/plotting/plot_trace_completion_combined.py --crawler-log-dir data/run_log/crawler/H200_enhanced_schedulers_v1_full --anns-log-dir data/run_log/anns/H200_enhanced_schedulers_v1_full --output-dir figures` |
 | **Figure 12** (Tokens invalidated CCDF) | `python scripts/anns/plotter_utils/plot_tokens_invalidated_aggregated.py --log-dir data/run_log/anns/H200_enhanced_schedulers_v1_full --output-dir figures --table-output-dir tables --min-qps 0.25 --max-qps 2.0` |
 | **Table 2** — ANNS workload stats | `cd data/anns && python compute_workload_stats.py --corpus-prefix retrieved_corpus_content --query-map query_trace_map_5k.json --trace-dir res --max-queries 500 --tokenizer-model meta-llama/Llama-3.1-8B-Instruct` |
-| **Table 2** — Crawler workload stats | `cd data/crawl && python compute_workload_stats.py --input-dir traces/simpleQA_ALL --tokenizer-model meta-llama/Llama-3.1-8B-Instruct --cores 10` |
+| **Table 2** — Crawler workload stats | `cd data/crawl && python compute_workload_stats.py --input-dir traces/simpleQA_ALL --tokenizer-model meta-llama/Llama-3.1-8B-Instruct --cores $(nproc)` |
 | **Table 3** (Eviction ablation) | See [Detailed Reproduction Commands](#detailed-reproduction-commands) |
 | **Table 4** (Preemption stats) | See [Detailed Reproduction Commands](#detailed-reproduction-commands) |
 | **Inline evaluation numbers** | See [Detailed Reproduction Commands](#detailed-reproduction-commands) |
