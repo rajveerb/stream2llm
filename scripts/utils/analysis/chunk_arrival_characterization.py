@@ -183,7 +183,7 @@ def main():
     ax.set_xscale("log")
     ax.set_xlabel("Inter-Chunk Arrival Time (ms)", fontsize=LABEL_SIZE, fontweight='bold', labelpad=LABEL_PAD)
     ax.set_ylabel("CDF", fontsize=LABEL_SIZE, fontweight='bold', labelpad=LABEL_PAD)
-    ax.set_title("CDF of Inter-Chunk Arrival Times (from Traces)", fontsize=TITLE_SIZE, fontweight='bold')
+    ax.set_title("CDF of Inter-Chunk Arrival Times (from Traces)", fontsize=TITLE_SIZE, fontweight='bold', pad=20)
     ax.legend(fontsize=LEGEND_SIZE)
     ax.tick_params(axis='both', which='major', labelsize=TICK_SIZE, pad=TICK_PAD)
     ax.grid(True, alpha=0.3)
