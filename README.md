@@ -13,6 +13,9 @@ This repository contains all scripts, data, and pre-built figures needed to repr
 git clone --recurse-submodules -b mlsys_artifact https://github.com/rajveerb/stream2llm.git
 cd stream2llm
 
+# Pull large files in data/ submodule (hosted on HuggingFace with Git LFS)
+cd data && git lfs install && git lfs pull && cd ..
+
 # Create and activate conda environment
 conda create -n stream2llm python=3.10.9 -y
 conda activate stream2llm
@@ -42,23 +45,24 @@ huggingface-cli login
 
 | Paper Artifact | Command |
 |----------------|---------|
-| **fig:perf-model** (Perf model comparison) | `python scripts/utils/plotting/plot_recomp_vs_swap_clean.py --recomp_input data/perf_model/recomputation/H200_tp2_recomputation_latency.json --swap_input data/perf_model/swap/H200_tp2_swap_kernel_latency.json --recomp_input_2 data/perf_model/recomputation/A40_recomputation_latency.json --swap_input_2 data/perf_model/swap/A40_swap_kernel_latency.json --output_dir figures --output_prefix hardware_comparison --title_1 "H200 TP=2" --title_2 "A40"` |
-| **fig:ttft** (Crawler + ANNS stacked) | `python scripts/utils/plotting/plot_ttft_ccdf_stacked_2x4.py --crawler-log-dir data/run_log/crawler/H200_enhanced_schedulers_v1_full --anns-log-dir data/run_log/anns/H200_enhanced_schedulers_v1_full --output-dir figures` |
-| **fig:completion** (Crawler + ANNS combined) | `python scripts/utils/plotting/plot_trace_completion_combined.py --crawler-log-dir data/run_log/crawler/H200_enhanced_schedulers_v1_full --anns-log-dir data/run_log/anns/H200_enhanced_schedulers_v1_full --output-dir figures` |
-| **fig:appendix-crawler-ttft-qps** | `python scripts/crawler/plotter_utils/plot_ttft_qps_comparison.py --log-dir data/run_log/crawler/H200_enhanced_schedulers_v1_full --output-dir figures --output-prefix ttft_qps_comparison_crawler -p 95 --max-rate 4` |
-| **fig:appendix-anns-ttft-qps** | `python scripts/anns/plotter_utils/plot_ttft_qps_comparison.py --log-dir data/run_log/anns/H200_enhanced_schedulers_v1_full --output-dir figures --output-prefix ttft_qps_comparison_anns -p 95 --max-rate 2` |
-| **fig:tokens-invalidated-ccdf** | `python scripts/anns/plotter_utils/plot_tokens_invalidated_aggregated.py --log-dir data/run_log/anns/H200_enhanced_schedulers_v1_full --output-dir figures --table-output-dir tables --min-qps 0.25 --max-qps 2.0` |
-| **tab:workload-characteristics** — ANNS | `cd data/anns && python compute_workload_stats.py --corpus-prefix retrieved_corpus_content --query-map query_trace_map_5k.json --trace-dir res --max-queries 500 --tokenizer-model meta-llama/Llama-3.1-8B-Instruct` |
-| **tab:workload-characteristics** — Crawler | `cd data/crawl && python compute_workload_stats.py --input-dir traces/simpleQA_ALL --tokenizer-model meta-llama/Llama-3.1-8B-Instruct --cores 100` |
-| **Chunk arrival characterization** | `python scripts/utils/analysis/chunk_arrival_characterization.py --anns-dir data/anns/res --crawler-dir data/crawl/traces/simpleQA_ALL --output-dir figures --table-dir tables` |
-| **tab:eviction-ablation-combined** | See [Detailed Reproduction Commands](#detailed-reproduction-commands) |
-| **tab:preemption-stats-combined** | See [Detailed Reproduction Commands](#detailed-reproduction-commands) |
+| **All artifacts** | `bash reproduce_artifacts.sh` |
+| **Figure 4** (Perf model comparison) | `python scripts/utils/plotting/plot_recomp_vs_swap_clean.py --recomp_input data/perf_model/recomputation/H200_tp2_recomputation_latency.json --swap_input data/perf_model/swap/H200_tp2_swap_kernel_latency.json --recomp_input_2 data/perf_model/recomputation/A40_recomputation_latency.json --swap_input_2 data/perf_model/swap/A40_swap_kernel_latency.json --output_dir figures --output_prefix hardware_comparison --title_1 "H200 TP=2" --title_2 "A40"` |
+| **Figure 5** (TTFT CCDF, Crawler + ANNS stacked) | `python scripts/utils/plotting/plot_ttft_ccdf_stacked_2x4.py --crawler-log-dir data/run_log/crawler/H200_enhanced_schedulers_v1_full --anns-log-dir data/run_log/anns/H200_enhanced_schedulers_v1_full --output-dir figures` |
+| **Figure 6** (Crawler TTFT vs QPS) | `python scripts/crawler/plotter_utils/plot_ttft_qps_comparison.py --log-dir data/run_log/crawler/H200_enhanced_schedulers_v1_full --output-dir figures --output-prefix ttft_qps_comparison_crawler -p 95 --max-rate 4` |
+| **Figure 7** (ANNS TTFT vs QPS) | `python scripts/anns/plotter_utils/plot_ttft_qps_comparison.py --log-dir data/run_log/anns/H200_enhanced_schedulers_v1_full --output-dir figures --output-prefix ttft_qps_comparison_anns -p 95 --max-rate 2` |
+| **Figures 8–10** (Chunk arrival characterization) | `python scripts/utils/analysis/chunk_arrival_characterization.py --anns-dir data/anns/res --crawler-dir data/crawl/traces/simpleQA_ALL --output-dir figures --table-dir tables` |
+| **Figure 11** (Trace completion, Crawler + ANNS) | `python scripts/utils/plotting/plot_trace_completion_combined.py --crawler-log-dir data/run_log/crawler/H200_enhanced_schedulers_v1_full --anns-log-dir data/run_log/anns/H200_enhanced_schedulers_v1_full --output-dir figures` |
+| **Figure 12** (Tokens invalidated CCDF) | `python scripts/anns/plotter_utils/plot_tokens_invalidated_aggregated.py --log-dir data/run_log/anns/H200_enhanced_schedulers_v1_full --output-dir figures --table-output-dir tables --min-qps 0.25 --max-qps 2.0` |
+| **Table 2** — ANNS workload stats | `cd data/anns && python compute_workload_stats.py --corpus-prefix retrieved_corpus_content --query-map query_trace_map_5k.json --trace-dir res --max-queries 500 --tokenizer-model meta-llama/Llama-3.1-8B-Instruct` |
+| **Table 2** — Crawler workload stats | `cd data/crawl && python compute_workload_stats.py --input-dir traces/simpleQA_ALL --tokenizer-model meta-llama/Llama-3.1-8B-Instruct --cores 10` |
+| **Table 3** (Eviction ablation) | See [Detailed Reproduction Commands](#detailed-reproduction-commands) |
+| **Table 4** (Preemption stats) | See [Detailed Reproduction Commands](#detailed-reproduction-commands) |
 | **Inline evaluation numbers** | See [Detailed Reproduction Commands](#detailed-reproduction-commands) |
 | **Scheduler sorting latency** | See [Detailed Reproduction Commands](#detailed-reproduction-commands) |
 
 ### Detailed Reproduction Commands
 
-#### tab:eviction-ablation-combined
+#### Table 3 — Eviction Ablation
 
 Ablation study table (scheduler + eviction strategy speedups). Run `compute_scheduler_improvements.py` against all 6 delay/ablation directories — 3 Crawler + 3 ANNS. Each invocation produces a `.txt` file in the output directory.
 
@@ -76,9 +80,9 @@ python scripts/utils/analysis/compute_scheduler_improvements.py --log-dir data/r
 python scripts/utils/analysis/compute_scheduler_improvements.py --log-dir data/run_log/anns/H200_enhanced_schedulers_v1_500q_delay_30_swap_only --output-dir tables --dataset-name H200_anns_swap_only --max-qps 2
 ```
 
-#### tab:preemption-stats-combined
+#### Table 4 — Preemption Stats
 
-Preemption statistics table. Run `analyze_preemptions.py` against the same 6 directories (output is printed to stdout).
+Preemption statistics table. Run `analyze_preemptions.py` against the same 6 directories.
 
 ```bash
 python scripts/utils/analysis/analyze_preemptions.py --log-dir data/run_log/crawler/H200_enhanced_schedulers_v1_full_delay_10
