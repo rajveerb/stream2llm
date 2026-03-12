@@ -301,7 +301,7 @@ def plot_ttft_qps_comparison_consolidated(data_by_delay_sched: Dict,
     plt.savefig(output_path, bbox_inches='tight', dpi=300)
     plt.close()
 
-    print(f"TTFT vs QPS comparison plot saved to {output_path}")
+    print(f"[saved] {output_path}")
 
 
 def main():
@@ -346,8 +346,6 @@ def main():
         print("No metrics files found. Exiting.")
         return
 
-    print(f"Found {len(metrics_files)} metrics files")
-
     # Collect and plot data
     data_by_delay, run_dirs_by_delay = collect_data_by_delay(
         metrics_files, args.percentile, args.min_rate, args.max_rate)
@@ -356,15 +354,10 @@ def main():
         print("No data collected")
         return
 
-    print(
-        f"Creating plots for {len(data_by_delay)} delay multiplier configurations"
-    )
     plot_ttft_qps_comparison_consolidated(data_by_delay, run_dirs_by_delay,
                                           args.output_dir, args.percentile,
                                           args.min_rate, args.max_rate,
                                           output_prefix=args.output_prefix)
-
-    print(f"Analysis complete. Results saved to {args.output_dir}")
 
 
 if __name__ == "__main__":

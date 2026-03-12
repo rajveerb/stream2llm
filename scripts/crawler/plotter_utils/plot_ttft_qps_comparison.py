@@ -226,7 +226,7 @@ def plot_ttft_qps_comparison(data: Dict, output_dir: str, percentile: float = 95
     plt.savefig(output_path, bbox_inches='tight', dpi=300)
     plt.close()
     
-    print(f"TTFT vs QPS comparison plot saved to {output_path}")
+    print(f"[saved] {output_path}")
 
 
 def main():
@@ -273,15 +273,9 @@ def main():
         print("No metrics files found. Exiting.")
         return
 
-    print(f"Found {len(metrics_files)} metrics files")
-    if args.exclude_schedulers:
-        print(f"Excluding schedulers: {args.exclude_schedulers}")
-
     # Collect and plot data
     data = collect_data(metrics_files, args.percentile, args.min_rate, args.max_rate, args.exclude_schedulers)
     plot_ttft_qps_comparison(data, args.output_dir, args.percentile, args.min_rate, args.max_rate, output_prefix=args.output_prefix)
-    
-    print(f"Analysis complete. Results saved to {args.output_dir}")
 
 
 if __name__ == "__main__":

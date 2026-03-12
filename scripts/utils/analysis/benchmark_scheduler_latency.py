@@ -309,13 +309,6 @@ def run_benchmarks(
                 "p95_us": np.percentile(latencies_us, 95),
                 "p99_us": np.percentile(latencies_us, 99),
             })
-            print(
-                f"  {algo_name:15s} | n={queue_size:4d} | "
-                f"mean={results[-1]['mean_us']:8.2f} us | "
-                f"p50={results[-1]['p50_us']:8.2f} us | "
-                f"p95={results[-1]['p95_us']:8.2f} us | "
-                f"p99={results[-1]['p99_us']:8.2f} us"
-            )
     return results
 
 
@@ -323,11 +316,19 @@ def run_benchmarks(
 # Output
 # ---------------------------------------------------------------------------
 def write_table(results: List[Dict], output_dir: Path,
-                dataset_name: str) -> Path:
+                dataset_name: str,
+                concurrencies: np.ndarray,
+                request_sizes: np.ndarray,
+                streaming_ratio: float) -> Path:
     output_dir.mkdir(parents=True, exist_ok=True)
     out_path = output_dir / f"scheduler_sorting_latency_{dataset_name}.txt"
 
     lines = []
+    lines.append(f"Dataset: {dataset_name}")
+    lines.append(f"Concurrency: mean={concurrencies.mean():.1f}, max={concurrencies.max():.0f}")
+    lines.append(f"Request sizes: mean={request_sizes.mean():.0f}, p95={np.percentile(request_sizes, 95):.0f}")
+    lines.append(f"Streaming ratio: {streaming_ratio:.2%}")
+    lines.append("")
     header = (f"{'Scheduler':15s} | {'Queue Size':>10s} | "
               f"{'Mean (us)':>10s} | {'P50 (us)':>10s} | "
               f"{'P95 (us)':>10s} | {'P99 (us)':>10s}")
@@ -364,22 +365,14 @@ def main():
                         help="Dataset name for output file naming")
     args = parser.parse_args()
 
-    print(f"Extracting distributions from {args.log_dir} ...")
     concurrencies, request_sizes, streaming_ratio = extract_distributions(
         args.log_dir)
-    print(f"  Concurrency: mean={concurrencies.mean():.1f}, "
-          f"max={concurrencies.max():.0f}")
-    print(f"  Request sizes: mean={request_sizes.mean():.0f}, "
-          f"p95={np.percentile(request_sizes, 95):.0f}")
-    print(f"  Streaming ratio: {streaming_ratio:.2%}")
-    print()
 
-    print("Running benchmarks ...")
     results = run_benchmarks(request_sizes, streaming_ratio)
-    print()
 
-    out_path = write_table(results, args.output_dir, args.dataset_name)
-    print(f"Table written to {out_path}")
+    out_path = write_table(results, args.output_dir, args.dataset_name,
+                           concurrencies, request_sizes, streaming_ratio)
+    print(f"[saved] {out_path}")
 
 
 if __name__ == "__main__":

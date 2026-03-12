@@ -110,13 +110,8 @@ def main():
     os.makedirs(args.output_dir, exist_ok=True)
     os.makedirs(args.table_dir, exist_ok=True)
 
-    print("Loading ANNS data...")
     anns_inter, anns_chunks, anns_durations = load_anns_inter_chunk_times(args.anns_dir)
-    print(f"  {len(anns_chunks)} queries, {len(anns_inter)} inter-chunk intervals")
-
-    print("Loading Crawler data...")
     crawl_inter, crawl_chunks, crawl_durations = load_crawler_inter_chunk_times(args.crawler_dir)
-    print(f"  {len(crawl_chunks)} queries, {len(crawl_inter)} inter-chunk intervals")
 
     # --- Summary statistics table ---
     stats_rows = []
@@ -173,7 +168,7 @@ def main():
             df_dur = pd.DataFrame(dur_stats).set_index("Workload")
             f.write(df_dur.to_string(float_format="%.2f") + "\n\n")
 
-    print(f"Table written to {table_path}")
+    print(f"[saved] {table_path}")
 
     # --- Figure 1: CDF of inter-chunk arrival times ---
     fig, ax = plt.subplots(figsize=(7, 4.5))
@@ -193,7 +188,7 @@ def main():
     cdf_path = os.path.join(args.output_dir, "chunk_arrival_cdf.png")
     fig.savefig(cdf_path, bbox_inches="tight")
     plt.close(fig)
-    print(f"CDF figure saved to {cdf_path}")
+    print(f"[saved] {cdf_path}")
 
     # --- Figure 2: Histogram of inter-chunk arrival times (side by side) ---
     fig, axes = plt.subplots(1, 2, figsize=(12, 4.5))
@@ -219,7 +214,7 @@ def main():
     hist_path = os.path.join(args.output_dir, "chunk_arrival_histogram.png")
     fig.savefig(hist_path, bbox_inches="tight")
     plt.close(fig)
-    print(f"Histogram figure saved to {hist_path}")
+    print(f"[saved] {hist_path}")
 
     # --- Figure 3: Chunks per query distribution ---
     fig, axes = plt.subplots(1, 2, figsize=(12, 4.5))
@@ -242,12 +237,7 @@ def main():
     cpq_path = os.path.join(args.output_dir, "chunks_per_query.png")
     fig.savefig(cpq_path, bbox_inches="tight")
     plt.close(fig)
-    print(f"Chunks per query figure saved to {cpq_path}")
-
-    # Print table to stdout as well
-    print("\n" + "=" * 80)
-    with open(table_path) as f:
-        print(f.read())
+    print(f"[saved] {cpq_path}")
 
 
 if __name__ == "__main__":

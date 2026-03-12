@@ -100,8 +100,6 @@ def _dataset(log_dir: Path, min_qps: float = 0, max_qps: float = float('inf')):
         print("[warn] No collected_outputs_streaming.json files found")
         return data
 
-    print(f"[info] Found {len(json_files)} JSON files")
-
     for json_file in json_files:
         try:
             run_dir = json_file.parent
@@ -116,7 +114,6 @@ def _dataset(log_dir: Path, min_qps: float = 0, max_qps: float = float('inf')):
             tokens = _extract_tokens_invalidated(json_file)
             if tokens:
                 data[sched][qps_val].extend(tokens)
-                print(f"[loaded] {sched} QPS {qps_val}: {len(tokens)} queries")
 
         except Exception as err:
             print(f"[warn] Error processing {json_file}: {err}")
@@ -229,18 +226,6 @@ def plot_tokens_invalidated_ccdf_1x4(data, output_dir: Path, title_suffix: str =
 
         # No per-subplot legend; shared legend at bottom
 
-        # Print efficiency ratios (lower is better for token invalidation)
-        if 'default_vllm' in percentile_data:
-            baseline_p50 = percentile_data['default_vllm']['p50']
-            baseline_p95 = percentile_data['default_vllm']['p95']
-
-            print(f"\n[QPS {qps_val}] Token Invalidation Efficiency vs Baseline:")
-            for sched in sorted(percentile_data.keys()):
-                if sched != 'default_vllm':
-                    p50_ratio = percentile_data[sched]['p50'] / baseline_p50 if baseline_p50 > 0 else float('inf')
-                    p95_ratio = percentile_data[sched]['p95'] / baseline_p95 if baseline_p95 > 0 else float('inf')
-                    print(f"  {_get_display_name(sched)}: P50 ratio={p50_ratio:.2f}x, P95 ratio={p95_ratio:.2f}x (lower is better)")
-
     # Overall title
     fig.suptitle(f"Token Invalidation CCDF — Update Mode, ANNS Workload{title_suffix}",
                  fontsize=32, fontweight='bold', y=1.02)
@@ -257,7 +242,7 @@ def plot_tokens_invalidated_ccdf_1x4(data, output_dir: Path, title_suffix: str =
     fig.savefig(output_dir / filename, dpi=300, bbox_inches='tight')
     plt.close(fig)
 
-    print(f"\n[saved] {output_dir / filename}")
+    print(f"[saved] {output_dir / filename}")
 
 
 def plot_tokens_invalidated_efficiency_table(data, output_dir: Path, title_suffix: str = "", table_output_dir: Path | None = None):
@@ -361,9 +346,6 @@ def main(argv: Sequence[str] | None = None):
     data = _dataset(args.log_dir, args.min_qps, args.max_qps)
     if not data:
         raise SystemExit("no data discovered")
-
-    print(f"\n[info] Filtering QPS range: {args.min_qps} - {args.max_qps}")
-    print(f"[info] Found {len(data)} schedulers with data\n")
 
     # Generate CCDF plot with efficiency annotations
     plot_tokens_invalidated_ccdf_1x4(data, args.output_dir, args.title_suffix)

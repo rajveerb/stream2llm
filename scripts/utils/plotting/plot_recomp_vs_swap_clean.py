@@ -187,7 +187,7 @@ def plot_dual_hardware_comparison(recomp_data_1, swap_data_1, title_1,
     fig.savefig(output_path, bbox_inches='tight', dpi=300)
     plt.close()
 
-    print(f"Dual hardware comparison plot saved to: {output_path}")
+    print(f"[saved] {output_path}")
 
 
 def plot_combined_latencies(recomp_data,
@@ -335,7 +335,7 @@ def plot_combined_latencies(recomp_data,
     plt.savefig(output_path, bbox_inches='tight', dpi=300)
     plt.close()
 
-    print(f"Combined plot saved to: {output_path}")
+    print(f"[saved] {output_path}")
 
 
 def main():

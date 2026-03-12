@@ -274,6 +274,7 @@ def main(argv: Sequence[str] | None = None):
                     f"{ratios['p99.9']:>10.3f}x\n"
                 )
 
+    print(f"[saved] {output_file}")
 
 
 if __name__ == "__main__":

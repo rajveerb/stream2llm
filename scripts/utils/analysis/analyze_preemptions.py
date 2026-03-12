@@ -119,3 +119,4 @@ if __name__ == "__main__":
     output_file = os.path.join(args.output_dir, f"preemption_stats_{log_dir_name}.txt")
 
     analyze_preemptions(args.log_dir, output_file)
+    print(f"[saved] {output_file}")
