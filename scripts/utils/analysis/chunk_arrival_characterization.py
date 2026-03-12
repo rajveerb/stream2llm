@@ -13,14 +13,17 @@ import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
 
 plt.rcParams.update({
-    "font.size": 13,
-    "axes.labelsize": 14,
-    "axes.titlesize": 15,
-    "xtick.labelsize": 12,
-    "ytick.labelsize": 12,
-    "legend.fontsize": 11,
     "figure.dpi": 150,
 })
+
+# Standardized font sizes (matches other paper scripts)
+SUPTITLE_SIZE = 32
+TITLE_SIZE = 28
+LABEL_SIZE = 26
+TICK_SIZE = 22
+LEGEND_SIZE = 24
+LABEL_PAD = 12
+TICK_PAD = 8
 
 
 def load_anns_inter_chunk_times(data_dir):
@@ -94,7 +97,7 @@ def compute_stats(values, label):
 def plot_cdf(ax, values, label, color):
     sorted_v = np.sort(values)
     cdf = np.arange(1, len(sorted_v) + 1) / len(sorted_v)
-    ax.plot(sorted_v, cdf, label=label, color=color, linewidth=2)
+    ax.plot(sorted_v, cdf, label=label, color=color, linewidth=5)
 
 
 def main():
@@ -171,17 +174,18 @@ def main():
     print(f"[saved] {table_path}")
 
     # --- Figure 1: CDF of inter-chunk arrival times ---
-    fig, ax = plt.subplots(figsize=(7, 4.5))
+    fig, ax = plt.subplots(figsize=(10, 7))
     colors = {"ANNS": "#1f77b4", "Crawler": "#d62728"}
     if len(anns_inter) > 0:
         plot_cdf(ax, anns_inter, "ANNS", colors["ANNS"])
     if len(crawl_inter) > 0:
         plot_cdf(ax, crawl_inter, "Crawler", colors["Crawler"])
     ax.set_xscale("log")
-    ax.set_xlabel("Inter-Chunk Arrival Time (ms)")
-    ax.set_ylabel("CDF")
-    ax.set_title("CDF of Inter-Chunk Arrival Times (from Traces)")
-    ax.legend()
+    ax.set_xlabel("Inter-Chunk Arrival Time (ms)", fontsize=LABEL_SIZE, fontweight='bold', labelpad=LABEL_PAD)
+    ax.set_ylabel("CDF", fontsize=LABEL_SIZE, fontweight='bold', labelpad=LABEL_PAD)
+    ax.set_title("CDF of Inter-Chunk Arrival Times (from Traces)", fontsize=TITLE_SIZE, fontweight='bold')
+    ax.legend(fontsize=LEGEND_SIZE)
+    ax.tick_params(axis='both', which='major', labelsize=TICK_SIZE, pad=TICK_PAD)
     ax.grid(True, alpha=0.3)
     ax.set_ylim(0, 1.02)
     fig.tight_layout()
@@ -191,7 +195,7 @@ def main():
     print(f"[saved] {cdf_path}")
 
     # --- Figure 2: Histogram of inter-chunk arrival times (side by side) ---
-    fig, axes = plt.subplots(1, 2, figsize=(12, 4.5))
+    fig, axes = plt.subplots(1, 2, figsize=(20, 8))
     for ax, (name, data, color) in zip(axes, [
         ("ANNS", anns_inter, colors["ANNS"]),
         ("Crawler", crawl_inter, colors["Crawler"]),
@@ -202,14 +206,15 @@ def main():
         bins = np.logspace(np.log10(max(data.min(), 0.01)), np.log10(data.max()), 50)
         ax.hist(data, bins=bins, color=color, alpha=0.75, edgecolor="white", linewidth=0.5)
         ax.set_xscale("log")
-        ax.set_xlabel("Inter-Chunk Arrival Time (ms)")
-        ax.set_ylabel("Count")
-        ax.set_title(f"{name}")
+        ax.set_xlabel("Inter-Chunk Arrival Time (ms)", fontsize=LABEL_SIZE, fontweight='bold', labelpad=LABEL_PAD)
+        ax.set_ylabel("Count", fontsize=LABEL_SIZE, fontweight='bold', labelpad=LABEL_PAD)
+        ax.set_title(f"{name}", fontsize=TITLE_SIZE, fontweight='bold')
+        ax.tick_params(axis='both', which='major', labelsize=TICK_SIZE, pad=TICK_PAD)
         ax.grid(True, alpha=0.3, axis="y")
         med = np.median(data)
-        ax.axvline(med, color="black", linestyle="--", linewidth=1.5, label=f"Median={med:.1f} ms")
-        ax.legend()
-    fig.suptitle("Distribution of Inter-Chunk Arrival Times (from Traces)", y=1.02)
+        ax.axvline(med, color="black", linestyle="--", linewidth=2.5, label=f"Median={med:.1f} ms")
+        ax.legend(fontsize=LEGEND_SIZE)
+    fig.suptitle("Distribution of Inter-Chunk Arrival Times (from Traces)", fontsize=SUPTITLE_SIZE, fontweight='bold', y=1.02)
     fig.tight_layout()
     hist_path = os.path.join(args.output_dir, "chunk_arrival_histogram.png")
     fig.savefig(hist_path, bbox_inches="tight")
@@ -217,7 +222,7 @@ def main():
     print(f"[saved] {hist_path}")
 
     # --- Figure 3: Chunks per query distribution ---
-    fig, axes = plt.subplots(1, 2, figsize=(12, 4.5))
+    fig, axes = plt.subplots(1, 2, figsize=(20, 8))
     for ax, (name, chunks, color) in zip(axes, [
         ("ANNS", anns_chunks, colors["ANNS"]),
         ("Crawler", crawl_chunks, colors["Crawler"]),
@@ -227,12 +232,13 @@ def main():
         arr = np.array(chunks)
         unique, counts = np.unique(arr, return_counts=True)
         ax.bar(unique, counts, color=color, alpha=0.75, edgecolor="white")
-        ax.set_xlabel("Chunks per Query")
-        ax.set_ylabel("Number of Queries")
-        ax.set_title(f"{name}")
+        ax.set_xlabel("Chunks per Query", fontsize=LABEL_SIZE, fontweight='bold', labelpad=LABEL_PAD)
+        ax.set_ylabel("Number of Queries", fontsize=LABEL_SIZE, fontweight='bold', labelpad=LABEL_PAD)
+        ax.set_title(f"{name}", fontsize=TITLE_SIZE, fontweight='bold')
+        ax.tick_params(axis='both', which='major', labelsize=TICK_SIZE, pad=TICK_PAD)
         ax.grid(True, alpha=0.3, axis="y")
         ax.xaxis.set_major_locator(ticker.MaxNLocator(integer=True))
-    fig.suptitle("Distribution of Chunks per Query (from Traces)", y=1.02)
+    fig.suptitle("Distribution of Chunks per Query (from Traces)", fontsize=SUPTITLE_SIZE, fontweight='bold', y=1.02)
     fig.tight_layout()
     cpq_path = os.path.join(args.output_dir, "chunks_per_query.png")
     fig.savefig(cpq_path, bbox_inches="tight")
