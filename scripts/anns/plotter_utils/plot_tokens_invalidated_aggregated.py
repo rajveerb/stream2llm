@@ -33,11 +33,11 @@ SCHEDULERS: Tuple[str,
 SCHEDULER_COLORS: dict[str, str] = {
     "default_vllm": "#1f77b4",
     "fcfs": "#ff7f0e",
-    "mcps": "#9467bd",
+    "lcas": "#2ca02c",
+    "mcps": "#d62728",
     "recomp": "#7f7f7f",
     "swap": "#bcbd22",
     "recomp_and_swap": "#17becf",
-    "lcas": "#d62728",
 }
 
 
