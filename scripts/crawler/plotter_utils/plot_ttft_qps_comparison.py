@@ -18,10 +18,10 @@ from collections import defaultdict
 def simplify_scheduler_name(scheduler: str) -> str:
     """Simplify scheduler name for display in plots."""
     name_mapping = {
-        'default_vllm': 'Default vLLM',
-        'fcfs': 'FCFS',
-        'lcas': 'LCAS',
-        'mcps': 'MCPS',
+        'default_vllm': 'vLLM',
+        'fcfs': 'Stream2LLM-FCFS',
+        'lcas': 'Stream2LLM-LCAS',
+        'mcps': 'Stream2LLM-MCPS',
     }
     return name_mapping.get(scheduler, scheduler)
 
@@ -107,16 +107,24 @@ def plot_ttft_qps_comparison(data: Dict, output_dir: str, percentile: float = 95
         print("No data available for plotting.")
         return
     
-    # Define colors and markers for different schedulers
-    colors = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd', '#8c564b', '#e377c2', '#7f7f7f', '#bcbd22', '#17becf']
-    markers = ['o', 's', '^', 'D', 'v', '<', '>', 'p', '*', 'h']
-    
+    # Define colors and markers for different schedulers (match other figures)
+    color_map = {
+        'default_vllm': '#1f77b4',
+        'fcfs': '#ff7f0e',
+        'lcas': '#2ca02c',
+        'mcps': '#d62728',
+    }
+    marker_map = {
+        'default_vllm': 'o',
+        'fcfs': 's',
+        'lcas': '^',
+        'mcps': 'D',
+    }
+
     # Create figure with two subplots
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(16, 6))
-    
+
     scheduler_names = sorted(data.keys())
-    color_map = {scheduler: colors[i % len(colors)] for i, scheduler in enumerate(scheduler_names)}
-    marker_map = {scheduler: markers[i % len(markers)] for i, scheduler in enumerate(scheduler_names)}
     
     # Get percentile key
     percentile_key = f'p{int(percentile)}'
@@ -150,29 +158,33 @@ def plot_ttft_qps_comparison(data: Dict, output_dir: str, percentile: float = 95
 
         # Plot 1: Average TTFT vs QPS
         if streaming_qps and streaming_mean:
+            streaming_label = f'{sched_name}-S' if scheduler == 'default_vllm' else sched_name
             ax1.plot(streaming_qps, streaming_mean,
                     color=color_map[scheduler], marker=marker_map[scheduler],
                     linestyle='-', linewidth=3.5, markersize=8,
-                    label=f'{sched_name} (Streaming)')
+                    label=streaming_label)
 
         if non_streaming_qps and non_streaming_mean:
+            ns_label = f'{sched_name}-NS' if scheduler == 'default_vllm' else f'{sched_name} (NS)'
             ax1.plot(non_streaming_qps, non_streaming_mean,
                     color=color_map[scheduler], marker=marker_map[scheduler],
                     linestyle='--', linewidth=3.5, markersize=8, alpha=0.7,
-                    label=f'{sched_name} (Non-Streaming)')
+                    label=ns_label)
 
         # Plot 2: Custom percentile TTFT vs QPS
         if streaming_qps and streaming_percentile:
+            streaming_label = f'{sched_name}-S' if scheduler == 'default_vllm' else sched_name
             ax2.plot(streaming_qps, streaming_percentile,
                     color=color_map[scheduler], marker=marker_map[scheduler],
                     linestyle='-', linewidth=3.5, markersize=8,
-                    label=f'{sched_name} (Streaming)')
+                    label=streaming_label)
 
         if non_streaming_qps and non_streaming_percentile:
+            ns_label = f'{sched_name}-NS' if scheduler == 'default_vllm' else f'{sched_name} (NS)'
             ax2.plot(non_streaming_qps, non_streaming_percentile,
                     color=color_map[scheduler], marker=marker_map[scheduler],
                     linestyle='--', linewidth=3.5, markersize=8, alpha=0.7,
-                    label=f'{sched_name} (Non-Streaming)')
+                    label=ns_label)
     
     # Customize Plot 1 (Average TTFT)
     ax1.set_xlabel('QPS', fontsize=26, fontweight='bold', labelpad=12)

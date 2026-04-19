@@ -124,10 +124,10 @@ def _dataset(log_dir: Path, min_qps: float = 0, max_qps: float = float('inf')):
 def _get_display_name(sched: str) -> str:
     """Convert scheduler name to display name."""
     display_names = {
-        "default_vllm": "Default vLLM",
-        "fcfs": "FCFS",
-        "lcas": "LCAS",
-        "mcps": "MCPS",
+        "default_vllm": "vLLM-S",
+        "fcfs": "Stream2LLM-FCFS",
+        "lcas": "Stream2LLM-LCAS",
+        "mcps": "Stream2LLM-MCPS",
     }
     return display_names.get(sched, sched.replace('_', ' ').title())
 

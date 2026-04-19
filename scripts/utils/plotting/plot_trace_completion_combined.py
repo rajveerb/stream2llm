@@ -107,10 +107,10 @@ def _dataset(csv_files: Sequence[Path], min_qps: float = 0, max_qps: float = flo
 
 def _get_display_name(sched: str) -> str:
     display_names = {
-        "default_vllm": "Default vLLM",
-        "fcfs": "FCFS",
-        "lcas": "LCAS",
-        "mcps": "MCPS",
+        "default_vllm": "vLLM",
+        "fcfs": "Stream2LLM-FCFS",
+        "lcas": "Stream2LLM-LCAS",
+        "mcps": "Stream2LLM-MCPS",
     }
     return display_names.get(sched, sched.replace('_', ' ').title())
 
@@ -149,11 +149,12 @@ def _plot_subplot(ax, data, workload_name, show_ylabel):
         color = SCHEDULER_COLORS.get(sched, "#000000")
         sched_data = scheduler_data[sched]
 
+        streaming_label = f"{display_name}-S" if sched == "default_vllm" else display_name
         ax.plot(sched_data["qps"],
                 sched_data["trace_times_streaming"],
                 marker='o', linestyle='-', linewidth=4.5, markersize=14,
                 markeredgewidth=2, markeredgecolor='white',
-                label=f"{display_name} (Streaming)",
+                label=streaming_label,
                 color=color, alpha=0.85)
 
         non_streaming_data = sched_data["trace_times_non_streaming"]
@@ -161,10 +162,11 @@ def _plot_subplot(ax, data, workload_name, show_ylabel):
             qps_ns = [q for q, v in zip(sched_data["qps"], non_streaming_data) if v is not None]
             trace_ns = [v for v in non_streaming_data if v is not None]
             if qps_ns:
+                ns_label = f"{display_name}-NS" if sched == "default_vllm" else f"{display_name} (NS)"
                 ax.plot(qps_ns, trace_ns,
                         marker='s', linestyle='--', linewidth=4, markersize=12,
                         markeredgewidth=1.5, markeredgecolor='white',
-                        label=f"{display_name} (Non-Streaming)",
+                        label=ns_label,
                         color=color, alpha=0.6)
 
     ax.set_xlabel("QPS", fontsize=26, fontweight='bold', labelpad=12)

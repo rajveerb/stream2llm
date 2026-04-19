@@ -105,10 +105,10 @@ def _plot_ccdf(ax, arr: TTFTArray, label: str, **style):
 
 def _get_display_name(sched: str) -> str:
     display_names = {
-        "default_vllm": "Default vLLM",
-        "fcfs": "FCFS",
-        "lcas": "LCAS",
-        "mcps": "MCPS",
+        "default_vllm": "vLLM",
+        "fcfs": "Stream2LLM-FCFS",
+        "lcas": "Stream2LLM-LCAS",
+        "mcps": "Stream2LLM-MCPS",
     }
     return display_names.get(sched, sched.replace('_', ' ').title())
 
@@ -144,15 +144,17 @@ def _plot_row(axes, data, target_qps, workload_name, is_top_row):
 
             streaming_data = np.asarray(data[sched][qps]["streaming"])
             if streaming_data.size > 0:
+                streaming_label = f"{display_name}-S" if sched == "default_vllm" else display_name
                 _plot_ccdf(ax, streaming_data,
-                           f"{display_name} (Streaming)",
+                           streaming_label,
                            color=color, linestyle="-",
                            linewidth=5, alpha=0.85)
 
             non_streaming_data = np.asarray(data[sched][qps]["non_streaming"])
             if non_streaming_data.size > 0:
+                ns_label = f"{display_name}-NS" if sched == "default_vllm" else f"{display_name} (NS)"
                 _plot_ccdf(ax, non_streaming_data,
-                           f"{display_name} (Non-Streaming)",
+                           ns_label,
                            color=color, linestyle="--",
                            linewidth=4.5, alpha=0.7)
 

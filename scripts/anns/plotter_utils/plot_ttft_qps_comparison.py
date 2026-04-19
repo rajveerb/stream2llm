@@ -28,10 +28,10 @@ except ImportError:
 def simplify_scheduler_name(scheduler: str) -> str:
     """Simplify scheduler name for display in plots."""
     name_mapping = {
-        'default_vllm': 'Default vLLM',
-        'fcfs': 'FCFS',
-        'lcas': 'LCAS',
-        'mcps': 'MCPS',
+        'default_vllm': 'vLLM',
+        'fcfs': 'Stream2LLM-FCFS',
+        'lcas': 'Stream2LLM-LCAS',
+        'mcps': 'Stream2LLM-MCPS',
     }
     return name_mapping.get(scheduler, scheduler)
 
@@ -212,9 +212,10 @@ def plot_ttft_qps_comparison_consolidated(data_by_delay_sched: Dict,
                          linestyle='-',
                          linewidth=3.5,
                          markersize=8,
-                         label=f'{sched_name} (Streaming)')
+                         label=f'{sched_name}-S' if scheduler == 'default_vllm' else sched_name)
 
             if non_streaming_qps and non_streaming_mean:
+                ns_label = f'{sched_name}-NS' if scheduler == 'default_vllm' else f'{sched_name} (NS)'
                 ax1.plot(non_streaming_qps,
                          non_streaming_mean,
                          color=color,
@@ -222,7 +223,7 @@ def plot_ttft_qps_comparison_consolidated(data_by_delay_sched: Dict,
                          linestyle='--',
                          linewidth=3.5,
                          markersize=8,
-                         label=f'{sched_name} (Non-Streaming)',
+                         label=ns_label,
                          alpha=0.6)
 
             # Plot 2: Custom percentile TTFT vs QPS
@@ -234,9 +235,10 @@ def plot_ttft_qps_comparison_consolidated(data_by_delay_sched: Dict,
                          linestyle='-',
                          linewidth=3.5,
                          markersize=8,
-                         label=f'{sched_name} (Streaming)')
+                         label=f'{sched_name}-S' if scheduler == 'default_vllm' else sched_name)
 
             if non_streaming_qps and non_streaming_percentile:
+                ns_label = f'{sched_name}-NS' if scheduler == 'default_vllm' else f'{sched_name} (NS)'
                 ax2.plot(non_streaming_qps,
                          non_streaming_percentile,
                          color=color,
@@ -244,7 +246,7 @@ def plot_ttft_qps_comparison_consolidated(data_by_delay_sched: Dict,
                          linestyle='--',
                          linewidth=3.5,
                          markersize=8,
-                         label=f'{sched_name} (Non-Streaming)',
+                         label=ns_label,
                          alpha=0.6)
 
         # Customize Plot 1 (Average TTFT)
